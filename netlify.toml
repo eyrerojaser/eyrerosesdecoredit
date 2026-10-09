@@ -1,0 +1,12 @@
+[build]
+  publish = "public"
+  command = "echo 'Sin paso de compilación'"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/admin"
+  to = "/index.html"
+  status = 200
