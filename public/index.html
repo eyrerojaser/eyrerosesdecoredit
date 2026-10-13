@@ -9,7 +9,16 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="Eyre Roses">
 <meta name="theme-color" content="#F8F5F4">
-<meta name="description" content="Ambientes completos para inspirarte, con cada pieza a un clic. Por Eyre Roses Decor.">
+<meta name="description" content="Ambientes completos, moda y decoración elegidos por Eyre Roses, con cada pieza a un clic.">
+<link rel="canonical" href="/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Eyre Roses Decor Edit">
+<meta property="og:title" content="Eyre Roses Decor Edit">
+<meta property="og:description" content="Ambientes completos, moda y decoración elegidos por Eyre Roses, con cada pieza a un clic.">
+<meta property="og:image" content="/icon-512.png">
+<meta property="og:url" content="/">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json" id="ld"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Jost:wght@300..600&display=swap">
@@ -128,9 +137,43 @@ h1,h2,h3{font-family:var(--display);font-weight:500;text-wrap:balance;margin:0;l
 .pbody h3{font-family:var(--body);font-size:16px;font-weight:500;line-height:1.3}
 .pnote{font-size:14px;color:var(--muted);margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .prow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:6px;flex-wrap:wrap}
+button.buy{border:0;cursor:pointer;font-family:inherit}
+.pcard.own .prow .buy{flex:1 1 100%;justify-content:center}
+/* Bag (cart) */
+.bag-btn{position:relative;display:inline-grid;place-items:center;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.bag-btn svg{width:18px;height:18px}
+.bag-count{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:var(--rose);color:var(--rose-ink);font-size:11px;font-weight:600;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+#bag{position:fixed;inset:0;z-index:60}
+#bag .shade{position:absolute;inset:0;background:rgba(20,10,14,.42)}
+#bag .panel{position:absolute;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--paper);color:var(--ink);display:flex;flex-direction:column;box-shadow:-12px 0 40px rgba(0,0,0,.18);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+#bag .bag-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--line)}
+#bag .bag-head h2{font-size:26px}
+#bag .bag-close{border:0;background:none;font-size:26px;line-height:1;cursor:pointer;color:var(--ink);padding:4px 8px}
+#bag .bag-list{flex:1;overflow:auto;padding:8px 20px;display:flex;flex-direction:column}
+#bag .bag-item{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:12px;align-items:start;padding:14px 0;border-bottom:1px solid var(--line)}
+#bag .bag-item .athumb{width:64px;height:64px;background:#fff;border:1px solid var(--line)}
+#bag .bag-item .athumb img{object-fit:contain}
+#bag .bag-item b{font-weight:500;display:block}
+#bag .bag-item small{color:var(--muted);font-size:13px}
+#bag .qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:99px;margin-top:8px}
+#bag .qty button{border:0;background:none;width:30px;height:28px;cursor:pointer;color:var(--ink);font-size:16px}
+#bag .qty span{min-width:22px;text-align:center;font-variant-numeric:tabular-nums}
+#bag .bag-rm{border:0;background:none;color:var(--muted);font-size:12.5px;text-decoration:underline;cursor:pointer;margin-left:10px}
+#bag .bag-foot{border-top:1px solid var(--line);padding:16px 20px;display:grid;gap:10px}
+#bag .bag-row{display:flex;justify-content:space-between;font-variant-numeric:tabular-nums}
+#bag .bag-row.total{font-size:18px;font-weight:500}
+#bag .bag-foot .btn{width:100%;justify-content:center}
+#bag .bag-empty{padding:40px 0;text-align:center;color:var(--muted)}
 .price{font-variant-numeric:tabular-nums;font-size:14px}
 .buy{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:13.5px;font-weight:500;padding:8px 14px;border-radius:99px;background:var(--rose);color:var(--rose-ink);white-space:nowrap}
 .buy:hover{filter:brightness(1.08)}
+.sizes{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+.size{border:1px solid var(--line);background:var(--surface);color:var(--ink);min-width:36px;padding:5px 9px;border-radius:99px;font-size:12.5px;cursor:pointer}
+.size:hover{border-color:var(--ink)}
+.size.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.size[disabled]{text-decoration:line-through;opacity:.45;cursor:not-allowed}
+.own-badge{background:var(--gold);color:#24191D}
+.buy.sold{background:var(--tint);color:var(--muted)}
 .buy svg,.btn svg{width:12px;height:12px;flex:none}
 .btn{white-space:nowrap}
 
@@ -303,7 +346,26 @@ function prod(id){ for (var i=0;i<S.products.length;i++) if (S.products[i].id===
 function coll(id){ for (var i=0;i<S.collections.length;i++) if (S.collections[i].id===id) return S.collections[i]; return null; }
 function cat(id){ for (var i=0;i<S.categories.length;i++) if (S.categories[i].id===id) return S.categories[i]; return null; }
 function catLabel(id){ var c = cat(id); return c ? c.label : "Sin categoría"; }
-function storeName(p){ return p.store === "Otra" ? (p.storeLabel || "la tienda") : p.store; }
+function storeName(p){ return p.store === "propia" ? "Eyre Roses (pieza propia)" : p.store === "Otra" ? (p.storeLabel || "la tienda") : p.store; }
+function slugU(t){ return String(t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,60); }
+function urlColl(c){ var sl = slugU(c.title); return "/coleccion/" + (sl ? sl + "-" : "") + c.id; }
+function urlCat(id){ return "/categoria/" + id; }
+function route(){
+  var p = decodeURIComponent(location.pathname).replace(/\/+$/,"");
+  var m;
+  if (/^\/admin$/i.test(p)) return { view:"admin" };
+  if ((m = p.match(/^\/(?:coleccion|collection)\/(.+)$/i))){ var seg = m[1], id = seg.slice(seg.lastIndexOf("-")+1); return { view:"coll", id: coll(id) ? id : seg }; }
+  if ((m = p.match(/^\/(?:categoria|category)\/(.+)$/i))) return { view:"cat", id:m[1] };
+  return { view:"home" };
+}
+function nav(href){ history.pushState(null, "", href); A.armed = null; render(); window.scrollTo(0,0); }
+/* Old addresses with # keep working */
+(function(){
+  var h = location.hash.slice(1), to = null;
+  if (h === "admin") to = "/admin"; else if (h === "inicio") to = "/";
+  else if (h.indexOf("c-")===0) to = "/coleccion/" + h.slice(2); else if (h.indexOf("cat-")===0) to = urlCat(h.slice(4));
+  if (to) history.replaceState(null, "", to);
+})();
 function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
 function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
 function ssGet(k){ try { return sessionStorage.getItem(k); } catch(e){ return null; } }
@@ -353,6 +415,17 @@ function guessCat(p){
 /* Fills gaps in saved data without deleting anything: fashion subcategories and products left without a category. */
 function normalize(){
   if (!S || !S.categories) return;
+  var seen = {};
+  S.categories.slice().forEach(function(c){
+    if (c.parent && cat(c.parent)) return;
+    var key = plain(c.label).trim();
+    if (!seen[key]){ seen[key] = c.id; return; }
+    var keep = seen[key];
+    S.products.forEach(function(p){ if (p.category === c.id) p.category = keep; });
+    S.collections.forEach(function(x){ if (x.category === c.id) x.category = keep; });
+    S.categories.forEach(function(k){ if (k.parent === c.id) k.parent = keep; });
+    S.categories = S.categories.filter(function(k){ return k !== c; });
+  });
   if (cat("moda") && !kids("moda").length){
     [["vestidos","Vestidos"],["zapatos","Zapatos"],["bolsos","Bolsos"],["accesorios","Accesorios"]].forEach(function(x){
       var id = x[0]; while (cat(id)) id += "-moda";
@@ -429,7 +502,7 @@ function autoTranslate(){
     });
   }, Promise.resolve()).then(function(){
     TR.busy = false;
-    if (done){ saveNow(); if (location.hash !== "#admin" || !A.edit) render(); toast(done === 1 ? "1 texto traducido al inglés." : done + " textos traducidos al inglés."); }
+    if (done){ saveNow(); if (route().view !== "admin" || !A.edit) render(); toast(done === 1 ? "1 texto traducido al inglés." : done + " textos traducidos al inglés."); }
     if (failed) toast("Algunos textos no se pudieron traducir al inglés. Se intentará de nuevo más tarde.");
   });
 }
@@ -493,13 +566,13 @@ function uploadImage(file, max){
 var LANG = (function(){ var v = lsGet("vc-lang"); if (v === "es" || v === "en") return v; var n = (navigator.language||"es").toLowerCase(); return n.indexOf("es")===0 ? "es" : "en"; })();
 var TX = {
   es: { all:"Todo", cats:"Categorías", admin:"Administrar", photoPending:"Foto pendiente",
-        example:"Ejemplo", exampleContent:"Contenido de ejemplo", shopOn:"Ver en ", linkPending:"Enlace pendiente", noProducts:"Todavía no hay productos aquí.",
+        example:"Ejemplo", exampleContent:"Contenido de ejemplo", shopOn:"Ver en ", linkPending:"Enlace pendiente", buyOwn:"Comprar", addToBag:"Añadir al carrito", bag:"Carrito", bagEmpty:"Tu carrito está vacío.", subtotal:"Subtotal", shipping:"Envío", freeShipFrom:"Envío gratis desde ", shipFree:"Gratis", shipAtPay:"El envío se suma al pagar.", checkout:"Pagar", orderWa:"Hacer pedido por WhatsApp", keepShopping:"Seguir mirando", added:"Añadido al carrito", removeItem:"Quitar", thanks:"¡Gracias por tu compra! Te llegará la confirmación por correo.", payOff:"El pago en línea todavía no está activo.", paying:"Abriendo el pago…", sizeLabel:"Talla", pickSize:"Elige tu talla primero", soldOut:"Agotada", ownBadge:"Eyre Roses", ownPiece:"Pieza exclusiva", ownTitle:"Colección <em>Eyre Roses</em>", ownLabel:"Piezas seleccionadas por mí", noProducts:"Todavía no hay productos aquí.",
         piece:"pieza", pieces:"piezas", toBuy:" para comprar", welcome:"Bienvenida", founderPhoto:"Foto de la fundadora", seeRooms:"Ver los ambientes", meet:"Conóceme",
         featured:"Colección destacada", shopRoom:"Descubrir la colección", inScene:" piezas en esta escena", seenInScene:"Lo que ves en la escena", pieceBy:"Pieza por <em>pieza</em>",
         collections:"Colecciones", rooms:"Ambientes", moreColl:"Más <em>colecciones</em>", catalog:"Catálogo", allSel:"Toda la <em>selección</em>",
         category:"Categoría", products:" productos", roomsN:" ambientes", home:"Inicio", collection:"Colección", shopThis:"Compra este <em>ambiente</em>", noCat:"Sin categoría", allProducts:"Todos los productos", store:"la tienda" },
   en: { all:"All", cats:"Categories", admin:"Admin", photoPending:"Photo coming soon",
-        example:"Sample", exampleContent:"Sample content", shopOn:"Shop on ", linkPending:"Link coming soon", noProducts:"No products here yet.",
+        example:"Sample", exampleContent:"Sample content", shopOn:"Shop on ", linkPending:"Link coming soon", buyOwn:"Buy now", addToBag:"Add to bag", bag:"Bag", bagEmpty:"Your bag is empty.", subtotal:"Subtotal", shipping:"Shipping", freeShipFrom:"Free shipping from ", shipFree:"Free", shipAtPay:"Shipping is added at checkout.", checkout:"Checkout", orderWa:"Order via WhatsApp", keepShopping:"Keep browsing", added:"Added to your bag", removeItem:"Remove", thanks:"Thank you for your order! Your confirmation is on its way by email.", payOff:"Online payment isn't active yet.", paying:"Opening checkout…", sizeLabel:"Size", pickSize:"Choose your size first", soldOut:"Sold out", ownBadge:"Eyre Roses", ownPiece:"Exclusive piece", ownTitle:"The Eyre Roses <em>collection</em>", ownLabel:"Pieces I hand-picked", noProducts:"No products here yet.",
         piece:"piece", pieces:"pieces", toBuy:" to shop", welcome:"Welcome", founderPhoto:"Photo of the founder", seeRooms:"Explore the rooms", meet:"Meet me",
         featured:"Featured collection", shopRoom:"Discover the collection", inScene:" pieces in this scene", seenInScene:"Everything in the scene", pieceBy:"Piece by <em>piece</em>",
         collections:"Collections", rooms:"Rooms", moreColl:"More <em>collections</em>", catalog:"Catalog", allSel:"The full <em>edit</em>",
@@ -514,7 +587,21 @@ function topCats(){ return S.categories.filter(function(c){ return !c.parent || 
 function topOf(id){ var c = cat(id); if (!c) return ""; return (c.parent && cat(c.parent)) ? c.parent : c.id; }
 function familyIds(id){ return [id].concat(kids(id).map(function(c){ return c.id; })); }
 function catName(id){ var c = cat(id); if (!c) return T("noCat"); if (LANG === "en"){ if (c.label_en && c.label_en.trim()) return c.label_en; if (CAT_EN[c.id]) return CAT_EN[c.id]; } return c.label; }
-function storeShown(p){ return p.store === "Otra" ? (p.storeLabel || T("store")) : p.store; }
+function storeShown(p){ return p.store === "propia" ? "Eyre Roses" : p.store === "Otra" ? (p.storeLabel || T("store")) : p.store; }
+function isOwn(p){ return p.store === "propia"; }
+function sizeList(t){ return String(t||"").split(/[,;\/]+/).map(function(x){ return x.trim(); }).filter(Boolean); }
+function buyHref(p, size){
+  var u = linkFor(p); if (!u || !size) return u;
+  try {
+    var url = new URL(u);
+    if (/(^|\.)wa\.me$|whatsapp\.com$/i.test(url.hostname)){
+      url.searchParams.set("text", (LANG==="en" ? "Hi! I'd like " : "¡Hola! Quiero ") + L(p,"name") + " — " + T("sizeLabel") + " " + size);
+    } else if (/stripe\.com$/i.test(url.hostname)){
+      url.searchParams.set("client_reference_id", (T("sizeLabel") + "-" + size).replace(/[^A-Za-z0-9_-]/g,"_"));
+    }
+    return url.href;
+  } catch(e){ return u; }
+}
 var DEFAULT_DISCLOSURE_EN = "As an Amazon Associate I earn from qualifying purchases. This site contains affiliate links, which means I may earn a commission at no extra cost to you.";
 var BRAND = "Eyre Roses Decor Edit";
 function siteName(){ var n = String(S.settings.name||"").trim(); return (!n || /vitrina/i.test(n)) ? BRAND : n; }
@@ -543,26 +630,32 @@ function header(active){
   var by = by_ ? (brand ? '<a class="byline" href="'+esc(brand)+'" target="_blank" rel="noopener"><b>'+esc(by_)+'</b></a>' : '<span class="byline"><b>'+esc(by_)+'</b></span>') : "";
   var name = esc(siteName());
   name = name.indexOf("&amp;")>=0 ? name.replace("&amp;", "<i>&amp;</i>") : name.replace(/\s(Edit)$/i, " <i>$1</i>");
-  var chips = '<a class="chip'+(active==="all"?" on":"")+'" href="#inicio">'+T("all")+'</a>';
+  var chips = '<a class="chip'+(active==="all"?" on":"")+'" href="/">'+T("all")+'</a>';
   var act = cat(active); if (act && act.parent && cat(act.parent)) active = act.parent;
-  topCats().forEach(function(c){ chips += '<a class="chip'+(active===c.id?" on":"")+'" href="#cat-'+esc(c.id)+'">'+esc(catName(c.id))+'</a>'; });
-  return '<header class="top"><div class="wrap"><div class="top-in"><a class="mark" href="#inicio"><span>'+name+'</span></a><div class="top-side">'+by+langSwitch()+'</div></div><nav class="cats" aria-label="'+T("cats")+'">'+chips+'</nav></div></header>';
+  topCats().forEach(function(c){ chips += '<a class="chip'+(active===c.id?" on":"")+'" href="'+urlCat(c.id)+'">'+esc(catName(c.id))+'</a>'; });
+  return '<header class="top"><div class="wrap"><div class="top-in"><a class="mark" href="/"><span>'+name+'</span></a><div class="top-side">'+by+langSwitch()+bagButton()+'</div></div><nav class="cats" aria-label="'+T("cats")+'">'+chips+'</nav></div></header>';
 }
 function card(p, n){
-  var img = safeImg(p.image), url = linkFor(p), name = L(p,"name"), note = L(p,"note");
-  return '<article class="pcard"><div class="pimg">'+(img?'<img src="'+esc(img)+'" alt="'+esc(name)+'" loading="lazy">':phProduct(p))+
-    (n?'<span class="pnum">'+n+'</span>':'')+(p.example?'<span class="badge">'+T("example")+'</span>':'')+
-    '</div><div class="pbody"><span class="label">'+esc(storeShown(p))+' · '+esc(catName(p.category))+'</span><h3>'+esc(name)+'</h3>'+
+  var img = safeImg(p.image), url = linkFor(p), name = L(p,"name"), note = L(p,"note"), own = isOwn(p);
+  var btn;
+  var sizes = own ? sizeList(p.sizes) : [], soldS = sizeList(p.soldSizes).map(function(x){ return x.toLowerCase(); });
+  var allSold = sizes.length && sizes.every(function(z){ return soldS.indexOf(z.toLowerCase())>=0; });
+  if (own && (p.soldOut || allSold)) btn = '<span class="buy sold">'+T("soldOut")+'</span>';
+  else if (own) btn = priceNum(p.price) ? '<button type="button" class="buy" data-cart="add" data-pid="'+esc(p.id)+'"'+(sizes.length?' data-needsize="1"':'')+'>'+T("addToBag")+'</button>' : '<span class="pnote">'+T("linkPending")+'</span>';
+  else if (url) btn = '<a class="buy" href="'+esc(url)+'" target="_blank" rel="sponsored noopener noreferrer">'+T("shopOn")+esc(storeShown(p))+' '+ARROW+'</a>';
+  else btn = '<span class="pnote">'+T("linkPending")+'</span>';
+  return '<article class="pcard'+(own?' own':'')+'"><div class="pimg">'+(img?'<img src="'+esc(img)+'" alt="'+esc(name)+'" loading="lazy">':phProduct(p))+
+    (n?'<span class="pnum">'+n+'</span>':'')+(own?'<span class="badge own-badge">'+T("ownBadge")+'</span>':(p.example?'<span class="badge">'+T("example")+'</span>':''))+
+    '</div><div class="pbody"><span class="label">'+(own?T("ownPiece"):esc(storeShown(p)))+' · '+esc(catName(p.category))+'</span><h3>'+esc(name)+'</h3>'+
     (note?'<p class="pnote">'+esc(note)+'</p>':'')+
-    '<div class="prow"><span class="price">'+esc(p.price||"")+'</span>'+
-    (url?'<a class="buy" href="'+esc(url)+'" target="_blank" rel="sponsored noopener noreferrer">'+T("shopOn")+esc(storeShown(p))+' '+ARROW+'</a>':'<span class="pnote">'+T("linkPending")+'</span>')+
-    '</div></div></article>';
+    (sizes.length && !p.soldOut && !allSold ? '<div class="sizes" role="group" aria-label="'+T("sizeLabel")+'">'+sizes.map(function(z){ var gone = soldS.indexOf(z.toLowerCase())>=0; return '<button type="button" class="size" data-size="'+esc(z)+'" data-pid="'+esc(p.id)+'"'+(gone?' disabled title="'+T("soldOut")+'"':'')+'>'+esc(z)+'</button>'; }).join("")+'</div>' : '')+
+    '<div class="prow"><span class="price">'+esc(p.price||"")+'</span>'+btn+'</div></div></article>';
 }
 function grid(list, numbered){ return list.length ? '<div class="grid">'+list.map(function(p,i){ return card(p, numbered?i+1:0); }).join("")+'</div>' : '<p class="empty">'+T("noProducts")+'</p>'; }
 function collProducts(c){ return (c.productIds||[]).map(prod).filter(Boolean); }
 function ccard(c){
   var n = collProducts(c).length;
-  return '<a class="ccard" href="#c-'+esc(c.id)+'"><div class="scene">'+sceneImg(c)+'</div><span class="label">'+esc(L(c,"kicker")||catName(c.category))+(c.example?' · '+T("example"):'')+'</span><h3>'+esc(L(c,"title"))+'</h3><p>'+n+' '+(n===1?T("piece"):T("pieces"))+T("toBuy")+'</p></a>';
+  return '<a class="ccard" href="'+esc(urlColl(c))+'"><div class="scene">'+sceneImg(c)+'</div><span class="label">'+esc(L(c,"kicker")||catName(c.category))+(c.example?' · '+T("example"):'')+'</span><h3>'+esc(L(c,"title"))+'</h3><p>'+n+' '+(n===1?T("piece"):T("pieces"))+T("toBuy")+'</p></a>';
 }
 function footer(){
   var ex = S.products.some(function(p){return p.example;}) || S.collections.some(function(c){return c.example;});
@@ -586,13 +679,15 @@ function viewHome(){
   var h = header("all") + '<main class="wrap">' + welcome() + '<div id="colecciones"></div>';
   if (feat){
     var items = collProducts(feat);
-    h += '<section class="hero"><figure class="window"><a class="scene" href="#c-'+esc(feat.id)+'">'+sceneImg(feat)+'</a></figure><div class="hero-text"><span class="label">'+esc(L(feat,"kicker")||T("featured"))+'</span><h2>'+esc(L(feat,"title"))+'</h2><p class="desc">'+esc(L(feat,"desc"))+'</p><a class="btn" href="#c-'+esc(feat.id)+'">'+T("shopRoom")+' '+ARROW+'</a><p class="count">'+items.length+T("inScene")+'</p></div></section>';
+    h += '<section class="hero"><figure class="window"><a class="scene" href="'+esc(urlColl(feat))+'">'+sceneImg(feat)+'</a></figure><div class="hero-text"><span class="label">'+esc(L(feat,"kicker")||T("featured"))+'</span><h2>'+esc(L(feat,"title"))+'</h2><p class="desc">'+esc(L(feat,"desc"))+'</p><a class="btn" href="'+esc(urlColl(feat))+'">'+T("shopRoom")+' '+ARROW+'</a><p class="count">'+items.length+T("inScene")+'</p></div></section>';
     if (items.length) h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("seenInScene")+'</span><h2>'+T("pieceBy")+'</h2></div></div>'+grid(items, true)+'</section>';
   } else {
     h += '<section class="hero"><div class="hero-text"><span class="label">'+T("collections")+'</span><h2>'+esc(L(S.settings,"tagline"))+'</h2></div></section>';
   }
   var others = S.collections.filter(function(c){ return c !== feat; });
   if (others.length) h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("rooms")+'</span><h2>'+T("moreColl")+'</h2></div></div><div class="cgrid">'+others.map(ccard).join("")+'</div></section>';
+  var own = S.products.filter(isOwn).sort(function(a,b){ return (a.soldOut?1:0) - (b.soldOut?1:0); });
+  if (own.length) h += '<section class="sec" id="eyre-roses"><div class="sec-head"><div><span class="label">'+T("ownLabel")+'</span><h2>'+T("ownTitle")+'</h2></div></div>'+grid(own)+'</section>';
   h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("catalog")+'</span><h2>'+T("allSel")+'</h2></div><p class="count">'+esc(L(S.settings,"tagline"))+'</p></div>'+grid(S.products)+'</section>';
   return h + '</main>' + footer();
 }
@@ -603,8 +698,8 @@ function viewCat(id){
   var cs = S.collections.filter(function(x){return fam.indexOf(x.category)>=0;});
   var parent = (c.parent && cat(c.parent)) ? cat(c.parent) : c, subs = kids(parent.id), sub = "";
   if (subs.length){
-    sub = '<div class="subcats"><a class="chip'+(parent.id===id?" on":"")+'" href="#cat-'+esc(parent.id)+'">'+T("all")+'</a>'+
-      subs.map(function(k){ return '<a class="chip'+(k.id===id?" on":"")+'" href="#cat-'+esc(k.id)+'">'+esc(catName(k.id))+'</a>'; }).join("")+'</div>';
+    sub = '<div class="subcats"><a class="chip'+(parent.id===id?" on":"")+'" href="'+urlCat(parent.id)+'">'+T("all")+'</a>'+
+      subs.map(function(k){ return '<a class="chip'+(k.id===id?" on":"")+'" href="'+urlCat(k.id)+'">'+esc(catName(k.id))+'</a>'; }).join("")+'</div>';
   }
   var h = header(id) + '<main class="wrap"><div class="chead"><span class="label">'+(parent.id!==id?esc(catName(parent.id)):T("category"))+'</span><h1>'+esc(catName(id))+'</h1><p>'+ps.length+T("products")+(cs.length?' · '+cs.length+T("roomsN"):'')+'</p>'+sub+'</div>';
   if (cs.length) h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("rooms")+'</span><h2>'+T("collections")+'</h2></div></div><div class="cgrid">'+cs.map(ccard).join("")+'</div></section>';
@@ -614,7 +709,7 @@ function viewCat(id){
 function viewColl(id){
   var c = coll(id); if (!c) return viewHome();
   var items = collProducts(c);
-  var h = header(c.category) + '<main class="wrap"><p class="crumb"><a href="#inicio">'+T("home")+'</a> / <a href="#cat-'+esc(c.category)+'">'+esc(catName(c.category))+'</a></p>';
+  var h = header(c.category) + '<main class="wrap"><p class="crumb"><a href="/">'+T("home")+'</a> / <a href="'+urlCat(c.category)+'">'+esc(catName(c.category))+'</a></p>';
   h += '<div class="chead"><span class="label">'+esc(L(c,"kicker")||T("collection"))+'</span><h1>'+esc(L(c,"title"))+'</h1><p>'+esc(L(c,"desc"))+'</p></div>';
   h += '<figure class="wide-window"><div class="scene">'+sceneImg(c)+'</div></figure>';
   h += '<section class="sec"><div class="sec-head"><div><span class="label">'+items.length+' '+T("pieces")+'</span><h2>'+T("shopThis")+'</h2></div></div>'+grid(items, true)+'</section>';
@@ -636,7 +731,7 @@ function viewAdmin(){
   if (!canEdit) return viewLogin();
   var h = header("") + '<main class="wrap adm">';
   h += '<div class="adm-bar"><div><h1>Panel</h1><div id="save-state" class="save-state"></div></div>'+
-    '<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="sbtn" href="#inicio" style="text-decoration:none">Ver sitio</a><button class="sbtn" data-act="logout">Salir</button></div></div>';
+    '<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="sbtn" href="/" style="text-decoration:none">Ver sitio</a><button class="sbtn" data-act="logout">Salir</button></div></div>';
   var tabs = [["collections","Colecciones"],["products","Productos"],["categories","Categorías"],["settings","Bienvenida y ajustes"]];
   h += '<div class="tabs" role="tablist">'+tabs.map(function(t){ return '<button class="tab'+(A.tab===t[0]?' on':'')+'" data-act="tab" data-tab="'+t[0]+'">'+t[1]+'</button>'; }).join("")+'</div>';
   if (A.edit) h += A.edit.kind==="p" ? editProduct() : editCollection();
@@ -701,7 +796,15 @@ function backupsBox(){
   });
   return h + '</div></div>';
 }
-function editSettings(){ return editSettingsMain() + backupsBox(); }
+function shopBox(){
+  var s = S.settings;
+  return '<div class="editor" style="margin-top:18px"><h2>Tienda: envíos y pagos</h2><p class="hint" style="margin-top:-8px">Para tus piezas propias, las que la clienta añade al carrito.</p><div class="fgrid">'+
+    fld("s-shipCost","Costo de envío",s.shipCost||"","","text","$8")+fld("s-freeShipFrom","Envío gratis desde (opcional)",s.freeShipFrom||"","","text","$75")+
+    fld("s-whatsapp","Tu WhatsApp para pedidos (opcional)",s.whatsapp||"","full","text","+1 312 555 0000")+
+    '<div class="field full"><p class="hint"><b>Pago con tarjeta: '+(PAY.stripe?'activo ✓':'todavía no activo')+'.</b> '+(PAY.stripe?'Las clientas pagan con tarjeta o Apple Pay y escriben su dirección de envío; ves cada pedido en tu cuenta de Stripe.':'Para activarlo: crea tu cuenta en stripe.com, copia tu clave secreta (empieza con sk_live_) y ponla en Netlify en Site configuration → Environment variables con el nombre STRIPE_SECRET_KEY; luego vuelve a desplegar. Mientras tanto, si pones tu WhatsApp, el carrito te manda el pedido por mensaje.')+'</p></div>'+
+    '</div><div class="ed-foot"><span></span><div><button class="sbtn pri" data-act="save-settings">Guardar</button></div></div></div>';
+}
+function editSettings(){ return editSettingsMain() + shopBox() + backupsBox(); }
 function editSettingsMain(){
   var s = S.settings, ph = safeImg(s.welcomePhoto);
   return '<div class="editor"><h2>Bienvenida de la portada</h2><p class="hint" style="margin-top:-8px">Es lo primero que ve la gente al entrar a tu web.</p><div class="fgrid">'+
@@ -746,11 +849,15 @@ function editProduct(){
   var h = '<div class="editor">'+(A.back?'<button class="sbtn" data-act="cancel" style="width:fit-content">← Volver a la colección</button>':'')+'<h2>'+(A.edit.isNew?'Nuevo producto':'Editar producto')+'</h2><div class="fgrid">'+
     fld("f-name","Nombre",f.name,"full")+
     fld("f-name_en","Nombre en inglés (opcional)",f.name_en||"","full","text","Ej.: Washed linen table runner")+
-    '<div class="field"><label for="f-store">Tienda</label><select id="f-store">'+STORES.map(function(s){return '<option'+(f.store===s?' selected':'')+'>'+s+'</option>';}).join("")+'</select></div>'+
+    '<div class="field"><label for="f-store">Tienda</label><select id="f-store"><option value="propia"'+(f.store==="propia"?' selected':'')+'>Eyre Roses (pieza propia)</option>'+STORES.map(function(s){return '<option'+(f.store===s?' selected':'')+'>'+s+'</option>';}).join("")+'</select></div>'+
     (f.store==="Otra"?fld("f-storeLabel","Nombre de la tienda",f.storeLabel):'')+
     '<div class="field"><label for="f-category">Categoría</label>'+catSelect("f-category",f.category)+'</div>'+
     fld("f-price","Precio (opcional)",f.price,"","text","$29.99")+
-    '<div class="field full"><label for="f-url">Enlace del producto o número ASIN</label><input type="text" id="f-url" value="'+esc(f.url)+'" placeholder="https://amzn.to/… o B0CXYZ1234"><p class="hint">Pega el enlace que te da Amazon Asociados (SiteStripe) para este producto, o solo su número ASIN. El botón lleva directo a ese producto.'+(S.settings.amazonTag?'':' Para usar el ASIN, pon tu ID de asociada en Ajustes.')+'</p></div>'+
+    (f.store==="propia"
+      ? fld("f-sizes","Tallas disponibles",f.sizes||"","","text","Small, Medium, Large")+fld("f-soldSizes","Tallas agotadas (opcional)",f.soldSizes||"","","text","Large")+
+        '<div class="field full"><p class="hint">Escribe las tallas separadas por comas, como quieras que se vean: «Small, Medium, Large» o «S, M, L». Debajo de la pieza salen como botones; la clienta toca su talla y «Añadir al carrito». Pon el precio arriba: es lo que se cobra.</p></div>'+
+        '<div class="field full"><label class="check" style="text-transform:none;letter-spacing:0;font-size:14px;color:var(--ink)"><input type="checkbox" id="f-soldout"'+(f.soldOut?' checked':'')+'> Agotada (se muestra, pero sin botón de compra)</label></div>'
+      : '<div class="field full"><label for="f-url">Enlace del producto o número ASIN</label><input type="text" id="f-url" value="'+esc(f.url)+'" placeholder="https://amzn.to/… o B0CXYZ1234"><p class="hint">Pega el enlace que te da Amazon Asociados (SiteStripe) para este producto, o solo su número ASIN. El botón lleva directo a ese producto.'+(S.settings.amazonTag?'':' Para usar el ASIN, pon tu ID de asociada en Ajustes.')+'</p></div>')+
     '<div class="field full"><label for="f-note">Nota corta (opcional)</label><input type="text" id="f-note" value="'+esc(f.note)+'" placeholder="Por qué te gusta esta pieza"></div>'+
     fld("f-note_en","Nota en inglés (opcional)",f.note_en||"","full","text","Why you love this piece")+
     imgPicker(f,false);
@@ -781,7 +888,7 @@ function editCollection(){
   return h;
 }
 function readSettings(){
-  var s = S.settings, map = { name:"s-name", brandName:"s-brandName", tagline:"s-tagline", brandUrl:"s-brandUrl", disclosure:"s-disclosure", welcomeTitle:"s-welcomeTitle", welcomeText:"s-welcomeText", welcomeSign:"s-welcomeSign", welcomeKicker:"s-welcomeKicker", welcomeText_en:"s-welcomeText_en", welcomeSign_en:"s-welcomeSign_en", welcomeKicker_en:"s-welcomeKicker_en", tagline_en:"s-tagline_en", disclosure_en:"s-disclosure_en" };
+  var s = S.settings, map = { name:"s-name", brandName:"s-brandName", tagline:"s-tagline", brandUrl:"s-brandUrl", disclosure:"s-disclosure", welcomeTitle:"s-welcomeTitle", welcomeText:"s-welcomeText", welcomeSign:"s-welcomeSign", welcomeKicker:"s-welcomeKicker", shipCost:"s-shipCost", freeShipFrom:"s-freeShipFrom", whatsapp:"s-whatsapp", welcomeText_en:"s-welcomeText_en", welcomeSign_en:"s-welcomeSign_en", welcomeKicker_en:"s-welcomeKicker_en", tagline_en:"s-tagline_en", disclosure_en:"s-disclosure_en" };
   Object.keys(map).forEach(function(k){ var v = val(map[k]); if (v !== undefined){ if (/_en$/.test(k) && s[k] !== v) delete s[k+"_src"]; s[k] = v; } });
   var tag = val("s-amazonTag"); if (tag !== undefined) s.amazonTag = tag.replace(/\s+/g,"");
   if (!s.name) s.name = "Eyre Roses Decor Edit";
@@ -789,8 +896,9 @@ function readSettings(){
 function val(id){ var el = document.getElementById(id); return el ? el.value.trim() : undefined; }
 function syncForm(){
   if (!A.edit) return; var f = A.edit.f;
-  ["name","name_en","storeLabel","price","url","note","note_en","title","title_en","kicker","kicker_en","desc","desc_en","category","store"].forEach(function(k){ var v = val("f-"+k); if (v !== undefined) f[k] = v; });
+  ["name","name_en","storeLabel","price","url","note","note_en","sizes","soldSizes","title","title_en","kicker","kicker_en","desc","desc_en","category","store"].forEach(function(k){ var v = val("f-"+k); if (v !== undefined) f[k] = v; });
   var fe = document.getElementById("f-featured"); if (fe) f.featured = fe.checked;
+  var so = document.getElementById("f-soldout"); if (so) f.soldOut = so.checked;
   var boxes = document.querySelectorAll("[data-incoll]"); if (boxes.length){ f.colls = []; boxes.forEach(function(b){ if (b.checked) f.colls.push(b.getAttribute("data-incoll")); }); }
 }
 function startEdit(kind, id){
@@ -809,8 +917,9 @@ function startEdit(kind, id){
 function saveProduct(){
   syncForm(); var f = A.edit.f;
   if (!f.name){ toast("Escribe el nombre del producto."); return; }
-  if (f.url && !linkFor({url:f.url})){ toast("Pega el enlace completo (https://…) o el número ASIN de 10 caracteres."); return; }
-  var p = { id:A.edit.id, name:f.name, store:f.store, storeLabel:f.store==="Otra"?f.storeLabel:"", url:f.url, price:f.price, category:f.category, note:f.note, name_en:f.name_en||"", note_en:f.note_en||"", image:f.image||"", example:false };
+  if (f.store === "propia" && !priceNum(f.price)){ toast("Escribe el precio de tu pieza, por ejemplo $48."); return; }
+  if (f.store !== "propia" && f.url && !linkFor({url:f.url})){ toast("Pega el enlace completo (https://…) o el número ASIN de 10 caracteres."); return; }
+  var p = { id:A.edit.id, name:f.name, store:f.store, storeLabel:f.store==="Otra"?f.storeLabel:"", url:f.url, price:f.price, category:f.category, note:f.note, soldOut: f.store==="propia" ? !!f.soldOut : false, sizes: f.store==="propia" ? (f.sizes||"") : "", soldSizes: f.store==="propia" ? (f.soldSizes||"") : "", name_en:f.name_en||"", note_en:f.note_en||"", image:f.image||"", example:false };
   carrySrc(p, prod(p.id), ["name","note"]);
   var i = S.products.findIndex(function(x){return x.id===p.id;});
   if (i>=0) S.products[i] = p; else S.products.unshift(p);
@@ -876,7 +985,7 @@ root.addEventListener("click", function(e){
     case "clear-img": A.edit.f.image = ""; render(); break;
     case "retry": flush(); break;
     case "reload": location.reload(); break;
-    case "logout": forget(); pw = ""; canEdit = false; A.edit = null; location.hash = "inicio"; break;
+    case "logout": forget(); pw = ""; canEdit = false; A.edit = null; nav("/"); break;
     case "move": {
       var arr = kind==="p" ? S.products : kind==="c" ? S.collections : S.categories;
       var i = arr.findIndex(function(x){return x.id===id;}), j = i + Number(b.getAttribute("data-d"));
@@ -978,24 +1087,158 @@ function render(){
     root.innerHTML = '<main class="wrap"><div class="empty" style="margin-top:60px"><h2>'+(LANG==="en"?"We couldn\'t load the shop":"No se pudo cargar la vitrina")+'</h2><p>'+(LANG==="en"?"Check your connection and try again.":"Revisa tu conexión e inténtalo de nuevo.")+'</p><button class="btn" data-act="reload" type="button">'+(LANG==="en"?"Try again":"Reintentar")+'</button></div></main>';
     return;
   }
-  var h = location.hash.slice(1), html;
-  if (!h && /^\/admin\/?$/i.test(location.pathname)) h = "admin";
-  if (h === "admin") html = viewAdmin();
-  else if (h.indexOf("c-")===0) html = viewColl(h.slice(2));
-  else if (h.indexOf("cat-")===0) html = viewCat(h.slice(4));
+  var r = route(), html;
+  if (r.view === "admin") html = viewAdmin();
+  else if (r.view === "coll") html = viewColl(r.id);
+  else if (r.view === "cat") html = viewCat(r.id);
   else html = viewHome();
   root.innerHTML = html;
   paintSave();
-  document.title = siteName();
+  paintBagCount();
+  if (document.getElementById("bag") && !document.getElementById("bag").hidden) renderBag();
+  seo(r);
 }
-window.addEventListener("hashchange", function(){
-  A.armed = null; render();
-  if (location.hash === "#colecciones"){ var el = document.getElementById("colecciones"); if (el){ el.scrollIntoView({behavior:"smooth"}); return; } }
-  window.scrollTo(0,0);
+/* Size picker and bag (cart) */
+var CART = (function(){ try { var c = JSON.parse(localStorage.getItem("vc-cart")||"[]"); return Array.isArray(c) ? c : []; } catch(e){ return []; } })();
+var PAY = { stripe:false };
+function saveCart(){ try { localStorage.setItem("vc-cart", JSON.stringify(CART)); } catch(e){} paintBagCount(); }
+function cartLines(){ return CART.map(function(it){ var p = prod(it.id); return p && isOwn(p) && !p.soldOut ? { it:it, p:p, price:+priceNum(p.price)||0 } : null; }).filter(Boolean); }
+function cartCount(){ return cartLines().reduce(function(n, l){ return n + l.it.qty; }, 0); }
+function money(n){ return "$" + (Math.round(n*100)/100).toFixed(2).replace(/\.00$/,""); }
+function paintBagCount(){ document.querySelectorAll(".bag-count").forEach(function(el){ var n = cartCount(); el.textContent = n; el.hidden = !n; }); }
+function bagButton(){
+  if (!S.products.some(isOwn) && !CART.length) return "";
+  return '<button type="button" class="bag-btn" data-cart="open" aria-label="'+T("bag")+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span class="bag-count" hidden>0</span></button>';
+}
+function addToCart(id, size){
+  var it = CART.filter(function(x){ return x.id === id && (x.size||"") === (size||""); })[0];
+  if (it) it.qty = Math.min(10, it.qty + 1); else CART.push({ id:id, size:size||"", qty:1 });
+  saveCart(); openBag(); toast(T("added"));
+}
+function shipInfo(sub){
+  var cost = +priceNum(S.settings.shipCost) || 0, free = +priceNum(S.settings.freeShipFrom) || 0;
+  if (!cost) return null;
+  return (free && sub >= free) ? 0 : cost;
+}
+function renderBag(){
+  var el = document.getElementById("bag"); if (!el) return;
+  var lines = cartLines(), sub = lines.reduce(function(n, l){ return n + l.price * l.it.qty; }, 0), ship = shipInfo(sub);
+  var h = '<div class="shade" data-cart="close"></div><aside class="panel" role="dialog" aria-modal="true" aria-label="'+T("bag")+'"><div class="bag-head"><h2>'+T("bag")+'</h2><button type="button" class="bag-close" data-cart="close" aria-label="×">×</button></div><div class="bag-list">';
+  if (!lines.length) h += '<p class="bag-empty">'+T("bagEmpty")+'</p>';
+  lines.forEach(function(l, i){
+    var img = safeImg(l.p.image);
+    h += '<div class="bag-item"><div class="athumb">'+(img?'<img src="'+esc(img)+'" alt="">':phProduct(l.p))+'</div><div><b>'+esc(L(l.p,"name"))+'</b><small>'+(l.it.size?T("sizeLabel")+': '+esc(l.it.size)+' · ':'')+esc(l.p.price)+'</small><div><span class="qty"><button type="button" data-cart="dec" data-i="'+i+'" aria-label="−">−</button><span>'+l.it.qty+'</span><button type="button" data-cart="inc" data-i="'+i+'" aria-label="+">+</button></span><button type="button" class="bag-rm" data-cart="rm" data-i="'+i+'">'+T("removeItem")+'</button></div></div><div class="price">'+money(l.price*l.it.qty)+'</div></div>';
+  });
+  h += '</div>';
+  if (lines.length){
+    var free = +priceNum(S.settings.freeShipFrom) || 0;
+    h += '<div class="bag-foot"><div class="bag-row"><span>'+T("subtotal")+'</span><span>'+money(sub)+'</span></div>'+
+      (ship === null ? '<p class="hint">'+T("shipAtPay")+'</p>' : '<div class="bag-row"><span>'+T("shipping")+'</span><span>'+(ship ? money(ship) : T("shipFree"))+'</span></div>'+(ship && free ? '<p class="hint">'+T("freeShipFrom")+money(free)+'</p>' : '')+'<div class="bag-row total"><span>Total</span><span>'+money(sub + ship)+'</span></div>')+
+      (PAY.stripe ? '<button type="button" class="btn" data-cart="checkout">'+T("checkout")+' '+ARROW+'</button>' : '')+
+      (waNumber() ? '<button type="button" class="btn'+(PAY.stripe?' ghost':'')+'" data-cart="wa">'+T("orderWa")+'</button>' : '')+
+      (!PAY.stripe && !waNumber() ? '<p class="hint">'+T("payOff")+'</p>' : '')+
+      '<button type="button" class="btn ghost" data-cart="close">'+T("keepShopping")+'</button></div>';
+  }
+  el.innerHTML = h + '</aside>';
+}
+function openBag(){ var el = document.getElementById("bag"); if (!el){ el = document.createElement("div"); el.id = "bag"; document.body.appendChild(el); } el.hidden = false; renderBag(); document.documentElement.style.overflow = "hidden"; }
+function closeBag(){ var el = document.getElementById("bag"); if (el) el.hidden = true; document.documentElement.style.overflow = ""; }
+function waNumber(){ return String(S.settings.whatsapp||"").replace(/\D/g,""); }
+function orderText(){
+  var lines = cartLines(), sub = lines.reduce(function(n, l){ return n + l.price * l.it.qty; }, 0), ship = shipInfo(sub);
+  var t = (LANG==="en" ? "Hi! I'd like to order:" : "¡Hola! Quiero hacer este pedido:") + "\n" + lines.map(function(l){ return "• " + L(l.p,"name") + (l.it.size ? " — " + T("sizeLabel") + " " + l.it.size : "") + " × " + l.it.qty + " — " + money(l.price*l.it.qty); }).join("\n");
+  t += "\n" + T("subtotal") + ": " + money(sub) + (ship !== null ? "\n" + T("shipping") + ": " + (ship ? money(ship) : T("shipFree")) + "\nTotal: " + money(sub + ship) : "");
+  return t;
+}
+document.addEventListener("click", function(e){
+  var sz = e.target.closest && e.target.closest(".size[data-size]");
+  if (sz){ var card = sz.closest(".pcard"); card.querySelectorAll(".size").forEach(function(b){ b.classList.toggle("on", b === sz); }); return; }
+  var c = e.target.closest && e.target.closest("[data-cart]"); if (!c) return;
+  e.preventDefault(); e.stopPropagation();
+  var act = c.getAttribute("data-cart"), lines = cartLines(), i = +c.getAttribute("data-i");
+  if (act === "add"){
+    var card2 = c.closest(".pcard"), on = card2 && card2.querySelector(".size.on");
+    if (c.getAttribute("data-needsize") && !on){ toast(T("pickSize")); var first = card2.querySelector(".size:not([disabled])"); if (first) first.focus(); return; }
+    addToCart(c.getAttribute("data-pid"), on ? on.getAttribute("data-size") : "");
+  }
+  else if (act === "open") openBag();
+  else if (act === "close") closeBag();
+  else if (act === "inc" && lines[i]){ lines[i].it.qty = Math.min(10, lines[i].it.qty + 1); saveCart(); renderBag(); }
+  else if (act === "dec" && lines[i]){ lines[i].it.qty--; if (lines[i].it.qty < 1) CART.splice(CART.indexOf(lines[i].it), 1); saveCart(); renderBag(); }
+  else if (act === "rm" && lines[i]){ CART.splice(CART.indexOf(lines[i].it), 1); saveCart(); renderBag(); }
+  else if (act === "wa"){ window.open("https://wa.me/" + waNumber() + "?text=" + encodeURIComponent(orderText()), "_blank", "noopener"); }
+  else if (act === "checkout"){
+    c.disabled = true; c.textContent = T("paying");
+    fetch("/api/checkout", { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ items: lines.map(function(l){ return { id:l.p.id, size:l.it.size, qty:l.it.qty }; }), lang: LANG }) })
+      .then(function(r){ return r.json().then(function(j){ if (!r.ok || !j.url) throw new Error(j && j.error || "x"); return j; }); })
+      .then(function(j){ location.href = j.url; })
+      .catch(function(err){ toast(err.message && err.message !== "x" ? err.message : T("payOff")); renderBag(); });
+  }
+}, true);
+document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeBag(); });
+/* Links inside the site change the page without reloading */
+document.addEventListener("click", function(e){
+  var a = e.target.closest && e.target.closest("a[href]"); if (!a) return;
+  var href = a.getAttribute("href");
+  if (href === "#colecciones"){ e.preventDefault(); var el = document.getElementById("colecciones"); if (el) el.scrollIntoView({behavior:"smooth"}); return; }
+  if (!href || href.charAt(0) !== "/" || href.charAt(1) === "/" || a.target === "_blank" || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+  e.preventDefault(); if (href !== location.pathname) nav(href); else window.scrollTo(0,0);
 });
+window.addEventListener("popstate", function(){ A.armed = null; render(); });
+
+/* Search engines: title, description, canonical address, preview card and product data for each page */
+function setMeta(sel, attr, val){ var el = document.head.querySelector(sel); if (el) el.setAttribute(attr, val); }
+function absUrl(u){ try { return new URL(u, location.origin).href; } catch(e){ return u; } }
+function plainText(t, n){ t = String(t||"").replace(/\s+/g," ").trim(); return t.length > n ? t.slice(0, n-1).replace(/\s+\S*$/,"") + "…" : t; }
+function priceNum(t){ var m = String(t||"").replace(/,/g,"").match(/\d+(\.\d+)?/); return m ? m[0] : null; }
+function itemList(products){
+  return { "@type":"ItemList", itemListElement: products.map(function(p, i){
+    var it = { "@type":"ListItem", position:i+1, name:L(p,"name") };
+    if (isOwn(p) && priceNum(p.price)){
+      it.item = { "@type":"Product", name:L(p,"name"), image: safeImg(p.image) ? absUrl(p.image) : undefined, description: L(p,"note") || undefined,
+        brand:{ "@type":"Brand", name:"Eyre Roses" },
+        offers:{ "@type":"Offer", price:priceNum(p.price), priceCurrency:"USD", availability: p.soldOut ? "https://schema.org/SoldOut" : "https://schema.org/InStock", url: linkFor(p) || absUrl(location.pathname) } };
+    } else if (linkFor(p)) it.url = linkFor(p);
+    return it;
+  }) };
+}
+function seo(r){
+  var name = siteName(), title = name, desc = plainText(L(S.settings,"welcomeText") || L(S.settings,"tagline"), 155), img = safeImg(S.settings.welcomePhoto) || "/icon-512.png", path = "/", ld = null;
+  if (r.view === "coll" && coll(r.id)){
+    var c = coll(r.id); title = L(c,"title") + " · " + name; desc = plainText(L(c,"desc") || L(c,"title"), 155) || desc; img = safeImg(c.image) || img; path = urlColl(c);
+    ld = { "@context":"https://schema.org", "@type":"CollectionPage", name:L(c,"title"), description:desc, url:absUrl(path), image:absUrl(img), mainEntity:itemList(collProducts(c)) };
+  } else if (r.view === "cat" && cat(r.id)){
+    var fam = familyIds(r.id), ps = S.products.filter(function(p){ return fam.indexOf(p.category)>=0; });
+    title = catName(r.id) + " · " + name; desc = plainText((LANG==="en" ? "Shop " + catName(r.id) + " picked by Eyre Roses: " : catName(r.id) + " elegidos por Eyre Roses: ") + ps.slice(0,6).map(function(p){ return L(p,"name"); }).join(", "), 155); path = urlCat(r.id);
+    ld = { "@context":"https://schema.org", "@type":"CollectionPage", name:catName(r.id), description:desc, url:absUrl(path), mainEntity:itemList(ps) };
+  } else if (r.view === "admin"){
+    title = "Panel · " + name;
+  } else {
+    ld = { "@context":"https://schema.org", "@graph":[
+      { "@type":"WebSite", name:name, url:absUrl("/"), inLanguage:["es","en"] },
+      { "@type":"Organization", name:name, url:absUrl("/"), logo:absUrl("/icon-512.png"), sameAs: safeUrl(S.settings.brandUrl) ? [S.settings.brandUrl] : undefined },
+      { "@type":"ItemList", name:LANG==="en"?"Collections":"Colecciones", itemListElement:S.collections.map(function(c, i){ return { "@type":"ListItem", position:i+1, name:L(c,"title"), url:absUrl(urlColl(c)) }; }) } ] };
+  }
+  document.title = title;
+  setMeta('meta[name="description"]', "content", desc);
+  setMeta('meta[property="og:title"]', "content", title);
+  setMeta('meta[property="og:description"]', "content", desc);
+  setMeta('meta[property="og:image"]', "content", absUrl(img));
+  setMeta('meta[property="og:url"]', "content", absUrl(path));
+  setMeta('link[rel="canonical"]', "href", absUrl(path));
+  var robots = document.head.querySelector('meta[name="robots"]');
+  if (r.view === "admin"){ if (!robots){ robots = document.createElement("meta"); robots.name = "robots"; document.head.appendChild(robots); } robots.content = "noindex"; }
+  else if (robots) robots.remove();
+  var el = document.getElementById("ld"); if (el) el.textContent = ld ? JSON.stringify(ld).replace(/</g,"\\u003c") : "";
+}
 
 var checkLogin = pw ? api("/api/login", { method: "POST" }).then(function(){ canEdit = true; }).catch(function(){ forget(); pw = ""; }) : Promise.resolve();
-Promise.all([load(), checkLogin]).then(function(){ loaded = true; render(); if (canEdit) setTimeout(autoTranslate, 1200); });
+fetch("/api/checkout", { cache:"no-store" }).then(function(r){ return r.ok ? r.json() : null; }).then(function(j){ PAY.stripe = !!(j && j.stripe); }).catch(function(){});
+Promise.all([load(), checkLogin]).then(function(){
+  loaded = true;
+  if (/[?&]pedido=ok/.test(location.search)){ CART = []; saveCart(); history.replaceState(null, "", location.pathname); setTimeout(function(){ toast(T("thanks")); }, 300); }
+  render(); if (canEdit) setTimeout(autoTranslate, 1200);
+});
 })();
 </script>
 </body>

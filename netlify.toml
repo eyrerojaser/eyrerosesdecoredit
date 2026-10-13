@@ -6,7 +6,29 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+# Each page of the shop has its own address; all of them open the same page,
+# which then shows the right collection or category.
 [[redirects]]
   from = "/admin"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/coleccion/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/collection/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/categoria/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/category/*"
   to = "/index.html"
   status = 200
