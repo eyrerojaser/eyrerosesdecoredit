@@ -172,6 +172,9 @@ button.buy{border:0;cursor:pointer;font-family:inherit}
 .size:hover{border-color:var(--ink)}
 .size.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .size[disabled]{text-decoration:line-through;opacity:.45;cursor:not-allowed}
+.field label.sz-opt{text-transform:none;letter-spacing:0;font-size:14px;color:var(--ink);font-weight:400}
+.sz-opt{border:1px solid var(--line);border-radius:99px;padding:6px 12px;background:var(--surface);cursor:pointer}
+.sz-opt:has(input:checked){border-color:var(--ink)}
 .own-badge{background:var(--gold);color:#24191D}
 .buy.sold{background:var(--tint);color:var(--muted)}
 .buy svg,.btn svg{width:12px;height:12px;flex:none}
@@ -852,10 +855,9 @@ function editProduct(){
     '<div class="field"><label for="f-store">Tienda</label><select id="f-store"><option value="propia"'+(f.store==="propia"?' selected':'')+'>Eyre Roses (pieza propia)</option>'+STORES.map(function(s){return '<option'+(f.store===s?' selected':'')+'>'+s+'</option>';}).join("")+'</select></div>'+
     (f.store==="Otra"?fld("f-storeLabel","Nombre de la tienda",f.storeLabel):'')+
     '<div class="field"><label for="f-category">Categoría</label>'+catSelect("f-category",f.category)+'</div>'+
-    fld("f-price","Precio (opcional)",f.price,"","text","$29.99")+
+    fld("f-price",f.store==="propia"?"Precio":"Precio (opcional)",f.price,"","text","$29.99")+
     (f.store==="propia"
-      ? fld("f-sizes","Tallas disponibles",f.sizes||"","","text","Small, Medium, Large")+fld("f-soldSizes","Tallas agotadas (opcional)",f.soldSizes||"","","text","Large")+
-        '<div class="field full"><p class="hint">Escribe las tallas separadas por comas, como quieras que se vean: «Small, Medium, Large» o «S, M, L». Debajo de la pieza salen como botones; la clienta toca su talla y «Añadir al carrito». Pon el precio arriba: es lo que se cobra.</p></div>'+
+      ? sizePicker(f)+
         '<div class="field full"><label class="check" style="text-transform:none;letter-spacing:0;font-size:14px;color:var(--ink)"><input type="checkbox" id="f-soldout"'+(f.soldOut?' checked':'')+'> Agotada (se muestra, pero sin botón de compra)</label></div>'
       : '<div class="field full"><label for="f-url">Enlace del producto o número ASIN</label><input type="text" id="f-url" value="'+esc(f.url)+'" placeholder="https://amzn.to/… o B0CXYZ1234"><p class="hint">Pega el enlace que te da Amazon Asociados (SiteStripe) para este producto, o solo su número ASIN. El botón lleva directo a ese producto.'+(S.settings.amazonTag?'':' Para usar el ASIN, pon tu ID de asociada en Ajustes.')+'</p></div>')+
     '<div class="field full"><label for="f-note">Nota corta (opcional)</label><input type="text" id="f-note" value="'+esc(f.note)+'" placeholder="Por qué te gusta esta pieza"></div>'+
@@ -893,12 +895,32 @@ function readSettings(){
   var tag = val("s-amazonTag"); if (tag !== undefined) s.amazonTag = tag.replace(/\s+/g,"");
   if (!s.name) s.name = "Eyre Roses Decor Edit";
 }
+var SIZE_OPTS = ["XS","Small","Medium","Large","XL","XXL","Talla única"];
+var SIZE_ABBR = { s:"Small", m:"Medium", l:"Large", sm:"Small", med:"Medium", lg:"Large", xs:"XS", xl:"XL", xxl:"XXL", "2xl":"XXL", "talla unica":"Talla única", "one size":"Talla única", "unica":"Talla única" };
+function canonSize(z){ var k = plain(z).trim(); var hit = SIZE_OPTS.filter(function(o){ return plain(o) === k; })[0]; return hit || SIZE_ABBR[k] || z.trim(); }
+function sizePicker(f){
+  var have = sizeList(f.sizes).map(canonSize), sold = sizeList(f.soldSizes).map(canonSize);
+  var other = have.filter(function(z){ return SIZE_OPTS.indexOf(z) < 0; });
+  var box = function(kind, list){ return SIZE_OPTS.map(function(o){ return '<label class="check sz-opt"><input type="checkbox" data-'+kind+'="'+esc(o)+'"'+(list.indexOf(o)>=0?' checked':'')+'> '+esc(o)+'</label>'; }).join(""); };
+  return '<div class="field full"><label>Tallas disponibles</label><div class="checks">'+box("szopt", have)+'</div></div>'+
+    fld("f-sizesOther","Otras tallas (opcional)",other.join(", "),"full","text","Para zapatos u otras medidas: 6, 7, 8")+
+    '<div class="field full"><label>¿Se acabó alguna talla?</label><div class="checks">'+box("szsold", sold)+'</div><p class="hint">Marca la que ya no tienes y saldrá tachada. Pon el precio arriba: es lo que se cobra en el carrito.</p></div>';
+}
 function val(id){ var el = document.getElementById(id); return el ? el.value.trim() : undefined; }
 function syncForm(){
   if (!A.edit) return; var f = A.edit.f;
   ["name","name_en","storeLabel","price","url","note","note_en","sizes","soldSizes","title","title_en","kicker","kicker_en","desc","desc_en","category","store"].forEach(function(k){ var v = val("f-"+k); if (v !== undefined) f[k] = v; });
   var fe = document.getElementById("f-featured"); if (fe) f.featured = fe.checked;
   var so = document.getElementById("f-soldout"); if (so) f.soldOut = so.checked;
+  var szBoxes = document.querySelectorAll("[data-szopt]");
+  if (szBoxes.length){
+    var have = []; szBoxes.forEach(function(b){ if (b.checked) have.push(b.getAttribute("data-szopt")); });
+    var oth = val("f-sizesOther"); if (oth) sizeList(oth).forEach(function(z){ if (have.indexOf(z) < 0) have.push(z); });
+    f.sizes = have.join(", ");
+    var gone = []; document.querySelectorAll("[data-szsold]").forEach(function(b){ if (b.checked) gone.push(b.getAttribute("data-szsold")); });
+    var keepOther = sizeList(f.soldSizes).map(canonSize).filter(function(z){ return SIZE_OPTS.indexOf(z) < 0 && have.indexOf(z) >= 0; });
+    f.soldSizes = gone.concat(keepOther).join(", ");
+  }
   var boxes = document.querySelectorAll("[data-incoll]"); if (boxes.length){ f.colls = []; boxes.forEach(function(b){ if (b.checked) f.colls.push(b.getAttribute("data-incoll")); }); }
 }
 function startEdit(kind, id){
