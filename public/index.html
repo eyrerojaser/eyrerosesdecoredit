@@ -210,6 +210,19 @@ button.buy{border:0;cursor:pointer;font-family:inherit}
 .wide-window{margin:0 0 8px;padding:10px;border:1px solid var(--gold);position:relative}
 .wide-window .scene{aspect-ratio:16/9}
 
+.foot-links{display:flex;flex-wrap:wrap;gap:8px 22px;border-top:1px solid var(--line);padding-top:24px;font-size:14px}
+.foot-links a{text-decoration:none;color:var(--ink)}
+.foot-links a:hover{color:var(--rose)}
+.foot-links + .disclose{border-top:0;padding-top:14px}
+.policy-body{max-width:68ch;display:flex;flex-direction:column;gap:12px;padding-bottom:28px}
+.policy-body h2{font-size:clamp(22px,2.6vw,28px);margin-top:14px}
+.policy-body p,.policy-body li{color:var(--ink);line-height:1.65;margin:0}
+.policy-body ul{margin:0;padding-left:20px;display:grid;gap:6px}
+.contact-list{display:grid;gap:14px;margin-top:10px}
+.contact-list div{display:grid;gap:2px}
+.contact-list a{font-size:18px;color:var(--rose);word-break:break-word}
+.policy-nav{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:30px}
+.policy-nav a{text-decoration:none;font-size:13px;padding:6px 14px;border-radius:99px;border:1px solid var(--line);background:var(--surface)}
 .disclose{border-top:1px solid var(--line);padding-block:28px 40px;font-size:13px;color:var(--muted);display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
 .disclose p{margin:0;max-width:70ch}
 .ex-note{display:inline-block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--warn);border:1px solid currentColor;padding:2px 8px;border-radius:99px}
@@ -349,7 +362,8 @@ function prod(id){ for (var i=0;i<S.products.length;i++) if (S.products[i].id===
 function coll(id){ for (var i=0;i<S.collections.length;i++) if (S.collections[i].id===id) return S.collections[i]; return null; }
 function cat(id){ for (var i=0;i<S.categories.length;i++) if (S.categories[i].id===id) return S.categories[i]; return null; }
 function catLabel(id){ var c = cat(id); return c ? c.label : "Sin categoría"; }
-function storeName(p){ return p.store === "propia" ? "Eyre Roses (pieza propia)" : p.store === "Otra" ? (p.storeLabel || "la tienda") : p.store; }
+function ownBrand(){ var b = String((S && S.settings && S.settings.ownBrand) || "").trim(); return b || "Eyre Roses Closet"; }
+function storeName(p){ return p.store === "propia" ? ownBrand() + " (pieza propia)" : p.store === "Otra" ? (p.storeLabel || "la tienda") : p.store; }
 function slugU(t){ return String(t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,60); }
 function urlColl(c){ var sl = slugU(c.title); return "/coleccion/" + (sl ? sl + "-" : "") + c.id; }
 function urlCat(id){ return "/categoria/" + id; }
@@ -359,6 +373,7 @@ function route(){
   if (/^\/admin$/i.test(p)) return { view:"admin" };
   if ((m = p.match(/^\/(?:coleccion|collection)\/(.+)$/i))){ var seg = m[1], id = seg.slice(seg.lastIndexOf("-")+1); return { view:"coll", id: coll(id) ? id : seg }; }
   if ((m = p.match(/^\/(?:categoria|category)\/(.+)$/i))) return { view:"cat", id:m[1] };
+  if ((m = p.match(/^\/(?:politicas|policies)\/(.+)$/i))) return { view:"policy", id:m[1].toLowerCase() };
   return { view:"home" };
 }
 function nav(href){ history.pushState(null, "", href); A.armed = null; render(); window.scrollTo(0,0); }
@@ -489,7 +504,7 @@ function translateQueue(){
       });
     });
   });
-  ["welcomeText","welcomeSign","welcomeKicker","tagline"].forEach(function(k){ if (needsEn(S.settings, k)) q.push([S.settings, k]); });
+  ["welcomeText","welcomeSign","welcomeKicker","tagline","policyShipping","policyReturns","policyPrivacy","policyContact"].forEach(function(k){ if (needsEn(S.settings, k)) q.push([S.settings, k]); });
   return q;
 }
 function autoTranslate(){
@@ -569,16 +584,16 @@ function uploadImage(file, max){
 var LANG = (function(){ var v = lsGet("vc-lang"); if (v === "es" || v === "en") return v; var n = (navigator.language||"es").toLowerCase(); return n.indexOf("es")===0 ? "es" : "en"; })();
 var TX = {
   es: { all:"Todo", cats:"Categorías", admin:"Administrar", photoPending:"Foto pendiente",
-        example:"Ejemplo", exampleContent:"Contenido de ejemplo", shopOn:"Ver en ", linkPending:"Enlace pendiente", buyOwn:"Comprar", addToBag:"Añadir al carrito", bag:"Carrito", bagEmpty:"Tu carrito está vacío.", subtotal:"Subtotal", shipping:"Envío", freeShipFrom:"Envío gratis desde ", shipFree:"Gratis", shipAtPay:"El envío se suma al pagar.", checkout:"Pagar", orderWa:"Hacer pedido por WhatsApp", keepShopping:"Seguir mirando", added:"Añadido al carrito", removeItem:"Quitar", thanks:"¡Gracias por tu compra! Te llegará la confirmación por correo.", payOff:"El pago en línea todavía no está activo.", paying:"Abriendo el pago…", sizeLabel:"Talla", pickSize:"Elige tu talla primero", soldOut:"Agotada", ownBadge:"Eyre Roses", ownPiece:"Pieza exclusiva", ownTitle:"Colección <em>Eyre Roses</em>", ownLabel:"Piezas seleccionadas por mí", noProducts:"Todavía no hay productos aquí.",
+        example:"Ejemplo", exampleContent:"Contenido de ejemplo", shopOn:"Ver en ", linkPending:"Enlace pendiente", buyOwn:"Comprar", addToBag:"Añadir al carrito", bag:"Carrito", bagEmpty:"Tu carrito está vacío.", subtotal:"Subtotal", shipping:"Envío", freeShipFrom:"Envío gratis desde ", shipFree:"Gratis", shipAtPay:"El envío se suma al pagar.", checkout:"Pagar", orderWa:"Hacer pedido por WhatsApp", keepShopping:"Seguir mirando", added:"Añadido al carrito", removeItem:"Quitar", thanks:"¡Gracias por tu compra! Te llegará la confirmación por correo.", payOff:"El pago en línea todavía no está activo.", paying:"Abriendo el pago…", sizeLabel:"Talla", pickSize:"Elige tu talla primero", soldOut:"Agotada", ownBadge:"Eyre Roses", ownPiece:"Exclusivo", ownTitle:"Colección <em>Eyre Roses</em>", ownLabel:"Ropa seleccionada por mí", noProducts:"Todavía no hay productos aquí.",
         piece:"pieza", pieces:"piezas", toBuy:" para comprar", welcome:"Bienvenida", founderPhoto:"Foto de la fundadora", seeRooms:"Ver los ambientes", meet:"Conóceme",
         featured:"Colección destacada", shopRoom:"Descubrir la colección", inScene:" piezas en esta escena", seenInScene:"Lo que ves en la escena", pieceBy:"Pieza por <em>pieza</em>",
-        collections:"Colecciones", rooms:"Ambientes", moreColl:"Más <em>colecciones</em>", catalog:"Catálogo", allSel:"Toda la <em>selección</em>",
+        collections:"Colecciones", rooms:"Ambientes", moreColl:"Más <em>colecciones</em>", catalog:"Catálogo", allSel:"Toda la <em>selección</em>", moreFinds:"Más de la <em>selección</em>",
         category:"Categoría", products:" productos", roomsN:" ambientes", home:"Inicio", collection:"Colección", shopThis:"Compra este <em>ambiente</em>", noCat:"Sin categoría", allProducts:"Todos los productos", store:"la tienda" },
   en: { all:"All", cats:"Categories", admin:"Admin", photoPending:"Photo coming soon",
-        example:"Sample", exampleContent:"Sample content", shopOn:"Shop on ", linkPending:"Link coming soon", buyOwn:"Buy now", addToBag:"Add to bag", bag:"Bag", bagEmpty:"Your bag is empty.", subtotal:"Subtotal", shipping:"Shipping", freeShipFrom:"Free shipping from ", shipFree:"Free", shipAtPay:"Shipping is added at checkout.", checkout:"Checkout", orderWa:"Order via WhatsApp", keepShopping:"Keep browsing", added:"Added to your bag", removeItem:"Remove", thanks:"Thank you for your order! Your confirmation is on its way by email.", payOff:"Online payment isn't active yet.", paying:"Opening checkout…", sizeLabel:"Size", pickSize:"Choose your size first", soldOut:"Sold out", ownBadge:"Eyre Roses", ownPiece:"Exclusive piece", ownTitle:"The Eyre Roses <em>collection</em>", ownLabel:"Pieces I hand-picked", noProducts:"No products here yet.",
+        example:"Sample", exampleContent:"Sample content", shopOn:"Shop on ", linkPending:"Link coming soon", buyOwn:"Buy now", addToBag:"Add to bag", bag:"Bag", bagEmpty:"Your bag is empty.", subtotal:"Subtotal", shipping:"Shipping", freeShipFrom:"Free shipping from ", shipFree:"Free", shipAtPay:"Shipping is added at checkout.", checkout:"Checkout", orderWa:"Order via WhatsApp", keepShopping:"Keep browsing", added:"Added to your bag", removeItem:"Remove", thanks:"Thank you for your order! Your confirmation is on its way by email.", payOff:"Online payment isn't active yet.", paying:"Opening checkout…", sizeLabel:"Size", pickSize:"Choose your size first", soldOut:"Sold out", ownBadge:"Eyre Roses", ownPiece:"Exclusive", ownTitle:"The Eyre Roses <em>collection</em>", ownLabel:"Clothing I hand-picked", noProducts:"No products here yet.",
         piece:"piece", pieces:"pieces", toBuy:" to shop", welcome:"Welcome", founderPhoto:"Photo of the founder", seeRooms:"Explore the rooms", meet:"Meet me",
         featured:"Featured collection", shopRoom:"Discover the collection", inScene:" pieces in this scene", seenInScene:"Everything in the scene", pieceBy:"Piece by <em>piece</em>",
-        collections:"Collections", rooms:"Rooms", moreColl:"More <em>collections</em>", catalog:"Catalog", allSel:"The full <em>edit</em>",
+        collections:"Collections", rooms:"Rooms", moreColl:"More <em>collections</em>", catalog:"Catalog", allSel:"The full <em>edit</em>", moreFinds:"More from the <em>edit</em>",
         category:"Category", products:" products", roomsN:" rooms", home:"Home", collection:"Collection", shopThis:"Shop this <em>look</em>", noCat:"Uncategorized", allProducts:"All products", store:"the store" }
 };
 function T(k){ return TX[LANG][k]; }
@@ -590,7 +605,7 @@ function topCats(){ return S.categories.filter(function(c){ return !c.parent || 
 function topOf(id){ var c = cat(id); if (!c) return ""; return (c.parent && cat(c.parent)) ? c.parent : c.id; }
 function familyIds(id){ return [id].concat(kids(id).map(function(c){ return c.id; })); }
 function catName(id){ var c = cat(id); if (!c) return T("noCat"); if (LANG === "en"){ if (c.label_en && c.label_en.trim()) return c.label_en; if (CAT_EN[c.id]) return CAT_EN[c.id]; } return c.label; }
-function storeShown(p){ return p.store === "propia" ? "Eyre Roses" : p.store === "Otra" ? (p.storeLabel || T("store")) : p.store; }
+function storeShown(p){ return p.store === "propia" ? ownBrand() : p.store === "Otra" ? (p.storeLabel || T("store")) : p.store; }
 function isOwn(p){ return p.store === "propia"; }
 function sizeList(t){ return String(t||"").split(/[,;\/]+/).map(function(x){ return x.trim(); }).filter(Boolean); }
 function buyHref(p, size){
@@ -648,7 +663,7 @@ function card(p, n){
   else if (url) btn = '<a class="buy" href="'+esc(url)+'" target="_blank" rel="sponsored noopener noreferrer">'+T("shopOn")+esc(storeShown(p))+' '+ARROW+'</a>';
   else btn = '<span class="pnote">'+T("linkPending")+'</span>';
   return '<article class="pcard'+(own?' own':'')+'"><div class="pimg">'+(img?'<img src="'+esc(img)+'" alt="'+esc(name)+'" loading="lazy">':phProduct(p))+
-    (n?'<span class="pnum">'+n+'</span>':'')+(own?'<span class="badge own-badge">'+T("ownBadge")+'</span>':(p.example?'<span class="badge">'+T("example")+'</span>':''))+
+    (n?'<span class="pnum">'+n+'</span>':'')+(own?'<span class="badge own-badge">'+esc(ownBrand())+'</span>':(p.example?'<span class="badge">'+T("example")+'</span>':''))+
     '</div><div class="pbody"><span class="label">'+(own?T("ownPiece"):esc(storeShown(p)))+' · '+esc(catName(p.category))+'</span><h3>'+esc(name)+'</h3>'+
     (note?'<p class="pnote">'+esc(note)+'</p>':'')+
     (sizes.length && !p.soldOut && !allSold ? '<div class="sizes" role="group" aria-label="'+T("sizeLabel")+'">'+sizes.map(function(z){ var gone = soldS.indexOf(z.toLowerCase())>=0; return '<button type="button" class="size" data-size="'+esc(z)+'" data-pid="'+esc(p.id)+'"'+(gone?' disabled title="'+T("soldOut")+'"':'')+'>'+esc(z)+'</button>'; }).join("")+'</div>' : '')+
@@ -660,9 +675,81 @@ function ccard(c){
   var n = collProducts(c).length;
   return '<a class="ccard" href="'+esc(urlColl(c))+'"><div class="scene">'+sceneImg(c)+'</div><span class="label">'+esc(L(c,"kicker")||catName(c.category))+(c.example?' · '+T("example"):'')+'</span><h3>'+esc(L(c,"title"))+'</h3><p>'+n+' '+(n===1?T("piece"):T("pieces"))+T("toBuy")+'</p></a>';
 }
+
+/* ---------- policy pages ---------- */
+var POLICIES = [
+  { slug:"envios", en:"shipping", key:"policyShipping", es_t:"Envíos", en_t:"Shipping" },
+  { slug:"devoluciones", en:"returns", key:"policyReturns", es_t:"Cambios y devoluciones", en_t:"Returns & exchanges" },
+  { slug:"privacidad", en:"privacy", key:"policyPrivacy", es_t:"Privacidad", en_t:"Privacy" },
+  { slug:"contacto", en:"contact", key:"policyContact", es_t:"Contacto", en_t:"Contact" }
+];
+function polBySlug(sl){ return POLICIES.filter(function(x){ return x.slug === sl || x.en === sl; })[0]; }
+function polTitle(x){ return LANG === "en" ? x.en_t : x.es_t; }
+function urlPol(x){ return "/politicas/" + x.slug; }
+function shipLine(en){
+  var cost = priceNum(S.settings.shipCost), free = priceNum(S.settings.freeShipFrom);
+  if (!cost) return en ? "The shipping cost is shown at checkout." : "El costo de envío se muestra al pagar.";
+  return (en ? "Shipping is " + money(+cost) + " per order." : "El envío cuesta " + money(+cost) + " por pedido.") + (free ? (en ? " It's free on orders of " + money(+free) + " or more." : " Es gratis en pedidos desde " + money(+free) + ".") : "");
+}
+function polDefault(key, en){
+  var brand = siteName();
+  var D = {
+    policyShipping: en
+      ? "## Where we ship\nFor now we ship within the United States only.\n\n## How long it takes\nWe prepare your order in 1 to 3 business days. USPS delivery then usually takes 3 to 7 business days. We'll send you the tracking number.\n\n## Cost\n" + shipLine(true) + "\n\n## Amazon and other stores\nProducts bought on Amazon or other stores through our links are shipped by that store, with its own times and costs."
+      : "## Dónde enviamos\nPor ahora enviamos solo dentro de Estados Unidos.\n\n## Cuánto tarda\nPreparamos tu pedido en 1 a 3 días hábiles. Después, el envío por USPS tarda normalmente de 3 a 7 días hábiles. Te enviaremos el número de seguimiento.\n\n## Costo\n" + shipLine(false) + "\n\n## Piezas de Amazon y otras tiendas\nLos productos que se compran en Amazon u otras tiendas a través de nuestros enlaces los envía esa tienda, con sus propios tiempos y costos.",
+    policyReturns: en
+      ? "## Returns and exchanges\nYou can request a size exchange or a return within 14 days of receiving your order.\n\n## Conditions\n- The piece must be unworn, unwashed and with its tags.\n- Pieces marked as final sale can't be exchanged or returned.\n- If a piece arrives damaged or isn't what you ordered, we'll replace it at no cost.\n\n## How to do it\nWrite to us from the Contact page with your name and order number and we'll tell you how to send it. Return shipping is paid by the customer unless the mistake was ours.\n\n## Refunds\nOnce we receive and check the piece, we refund the original payment method within 5 to 10 business days. The original shipping cost isn't refunded.\n\n## Amazon and other stores\nReturns of products bought on Amazon or other stores are handled directly with that store, under its own policies."
+      : "## Cambios y devoluciones\nPuedes pedir un cambio de talla o una devolución dentro de los 14 días después de recibir tu pedido.\n\n## Condiciones\n- La pieza debe estar sin usar, sin lavar y con sus etiquetas.\n- Las piezas marcadas como venta final no tienen cambio ni devolución.\n- Si la pieza llegó dañada o no es la que pediste, te la cambiamos sin costo.\n\n## Cómo hacerlo\nEscríbenos desde la página de Contacto con tu nombre y tu número de pedido, y te diremos cómo enviarla. El envío de regreso lo paga la clienta, salvo que el error sea nuestro.\n\n## Reembolsos\nCuando recibamos y revisemos la pieza, hacemos el reembolso al mismo método de pago en 5 a 10 días hábiles. El costo del envío original no se reembolsa.\n\n## Compras en Amazon y otras tiendas\nLas devoluciones de productos comprados en Amazon u otras tiendas se hacen directamente con esa tienda, según sus propias políticas.",
+    policyPrivacy: en
+      ? "## What we use\nWhen you buy a piece from " + brand + ", the payment is processed by Stripe. We never see or store your card details. We receive your name, email, phone and shipping address only to prepare and ship your order.\n\n## Orders by WhatsApp\nIf you order by WhatsApp, we use your number and the details you share only to handle that order.\n\n## Your browser\nThis site keeps your bag and your chosen language in your browser so they aren't lost. We don't use advertising trackers of our own.\n\n## Affiliate links\nSome links lead to Amazon and other stores. If you buy there, that store may use cookies under its own privacy policy, and we may earn a commission at no extra cost to you.\n\n## Your data\nYou can ask us to see or delete your information by writing to us from the Contact page. We never sell your data."
+      : "## Qué información usamos\nCuando compras una pieza de " + brand + ", el pago lo procesa Stripe. Nosotros nunca vemos ni guardamos los datos de tu tarjeta. Recibimos tu nombre, correo, teléfono y dirección de envío solo para preparar y enviar tu pedido.\n\n## Pedidos por WhatsApp\nSi haces tu pedido por WhatsApp, usamos tu número y los datos que nos compartas solo para atender ese pedido.\n\n## Tu navegador\nEsta web guarda en tu navegador tu carrito y el idioma que elegiste, para que no se pierdan. No usamos herramientas de publicidad propias.\n\n## Enlaces de afiliados\nAlgunos enlaces llevan a Amazon y otras tiendas. Si compras ahí, esa tienda puede usar cookies según su propia política de privacidad, y nosotros podemos recibir una comisión sin costo extra para ti.\n\n## Tus datos\nPuedes pedirnos ver o borrar tu información escribiéndonos desde la página de Contacto. Nunca vendemos tus datos.",
+    policyContact: en
+      ? "Have a question about a piece, your size or your order? Write to us and we'll get back to you as soon as we can."
+      : "¿Tienes una pregunta sobre una pieza, tu talla o tu pedido? Escríbenos y te respondemos lo antes posible."
+  };
+  return D[key];
+}
+function polText(x){
+  var s = S.settings, es = String(s[x.key]||"").trim();
+  if (LANG === "en"){ var en = String(s[x.key+"_en"]||"").trim(); if (en) return en; return es ? es : polDefault(x.key, true); }
+  return es || polDefault(x.key, false);
+}
+function richText(t){
+  return String(t||"").split(/\n{2,}/).map(function(block){
+    block = block.trim(); if (!block) return "";
+    if (/^##\s+/.test(block)){ var lines = block.split("\n"); var head = '<h2>'+esc(lines.shift().replace(/^##\s+/,""))+'</h2>'; return head + (lines.length ? richText(lines.join("\n")) : ""); }
+    var ls = block.split("\n");
+    if (ls.every(function(l){ return /^\s*[-•]\s+/.test(l); })) return '<ul>'+ls.map(function(l){ return '<li>'+esc(l.replace(/^\s*[-•]\s+/,""))+'</li>'; }).join("")+'</ul>';
+    return '<p>'+ls.map(esc).join("<br>")+'</p>';
+  }).join("");
+}
+function contactBlock(){
+  var s = S.settings, wa = waNumber(), mail = String(s.contactEmail||"").trim(), ig = safeUrl(s.brandUrl), h = '<div class="contact-list">';
+  if (mail) h += '<div><span class="label">'+(LANG==="en"?"Email":"Correo")+'</span><a href="mailto:'+esc(mail)+'">'+esc(mail)+'</a></div>';
+  if (wa) h += '<div><span class="label">WhatsApp</span><a href="https://wa.me/'+esc(wa)+'" target="_blank" rel="noopener">'+esc(s.whatsapp)+'</a></div>';
+  if (ig) h += '<div><span class="label">'+(LANG==="en"?"Social":"Redes")+'</span><a href="'+esc(ig)+'" target="_blank" rel="noopener">'+esc(ig.replace(/^https?:\/\/(www\.)?/,"").replace(/\/$/,""))+'</a></div>';
+  return h + '</div>';
+}
+function viewPolicy(sl){
+  var x = polBySlug(sl); if (!x) return viewHome();
+  var h = header("") + '<main class="wrap policy"><p class="crumb"><a href="/">'+T("home")+'</a></p><div class="chead"><span class="label">'+esc(siteName())+'</span><h1>'+esc(polTitle(x))+'</h1></div><article class="policy-body">'+richText(polText(x))+(x.key === "policyContact" ? contactBlock() : "")+'</article>';
+  h += '<nav class="policy-nav">'+POLICIES.filter(function(y){ return y !== x; }).map(function(y){ return '<a href="'+urlPol(y)+'">'+esc(polTitle(y))+'</a>'; }).join("")+'</nav>';
+  return h + '</main>' + footer();
+}
+function listPolicies(){
+  var s = S.settings, h = '<div class="editor"><h2>Políticas de tu tienda</h2><p class="hint" style="margin-top:-8px">Estas páginas salen al pie de tu web. Ya traen un texto sugerido; cámbialo a tu gusto. Usa «## » al inicio de una línea para un subtítulo y «- » para una lista. Revísalas con calma: no son asesoría legal.</p><div class="fgrid">'+
+    fld("s-contactEmail","Correo de contacto",s.contactEmail||"","full","text","hola@tucorreo.com");
+  POLICIES.forEach(function(x){
+    var es = String(s[x.key]||"").trim() || polDefault(x.key, false);
+    h += '<div class="field full"><label for="s-'+x.key+'">'+esc(x.es_t)+'</label><textarea id="s-'+x.key+'" style="min-height:'+(x.key==="policyContact"?90:220)+'px">'+esc(es)+'</textarea><p class="hint">Se ve en <a href="'+urlPol(x)+'" target="_blank" rel="noopener">'+esc(location.origin + urlPol(x))+'</a></p></div>';
+    h += '<div class="field full"><label for="s-'+x.key+'_en">'+esc(x.en_t)+' (inglés, opcional)</label><textarea id="s-'+x.key+'_en" style="min-height:80px" placeholder="Si lo dejas vacío, se usa el texto en inglés sugerido o se traduce solo.">'+esc(s[x.key+"_en"]||"")+'</textarea></div>';
+  });
+  return h + '</div><div class="ed-foot"><span></span><div><button class="sbtn pri" data-act="save-policies">Guardar políticas</button></div></div></div>';
+}
+
 function footer(){
   var ex = S.products.some(function(p){return p.example;}) || S.collections.some(function(c){return c.example;});
-  return '<footer class="wrap"><div class="disclose"><p>'+esc(disclosure())+'</p>'+(ex?'<span class="ex-note">'+T("exampleContent")+'</span>':'')+'</div></footer>';
+  return '<footer class="wrap"><nav class="foot-links">'+POLICIES.map(function(x){ return '<a href="'+urlPol(x)+'">'+esc(polTitle(x))+'</a>'; }).join("")+'</nav><div class="disclose"><p>'+esc(disclosure())+'</p>'+(ex?'<span class="ex-note">'+T("exampleContent")+'</span>':'')+'</div></footer>';
 }
 function welcome(){
   var s = S.settings, ph = safeImg(s.welcomePhoto);
@@ -680,8 +767,10 @@ function welcome(){
 function viewHome(){
   var feat = S.collections.filter(function(c){return c.featured;})[0] || S.collections[0];
   var h = header("all") + '<main class="wrap">' + welcome() + '<div id="colecciones"></div>';
+  var shown = {}; /* each product appears only once on the home page */
   if (feat){
     var items = collProducts(feat);
+    items.forEach(function(p){ shown[p.id] = true; });
     h += '<section class="hero"><figure class="window"><a class="scene" href="'+esc(urlColl(feat))+'">'+sceneImg(feat)+'</a></figure><div class="hero-text"><span class="label">'+esc(L(feat,"kicker")||T("featured"))+'</span><h2>'+esc(L(feat,"title"))+'</h2><p class="desc">'+esc(L(feat,"desc"))+'</p><a class="btn" href="'+esc(urlColl(feat))+'">'+T("shopRoom")+' '+ARROW+'</a><p class="count">'+items.length+T("inScene")+'</p></div></section>';
     if (items.length) h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("seenInScene")+'</span><h2>'+T("pieceBy")+'</h2></div></div>'+grid(items, true)+'</section>';
   } else {
@@ -689,9 +778,11 @@ function viewHome(){
   }
   var others = S.collections.filter(function(c){ return c !== feat; });
   if (others.length) h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("rooms")+'</span><h2>'+T("moreColl")+'</h2></div></div><div class="cgrid">'+others.map(ccard).join("")+'</div></section>';
-  var own = S.products.filter(isOwn).sort(function(a,b){ return (a.soldOut?1:0) - (b.soldOut?1:0); });
-  if (own.length) h += '<section class="sec" id="eyre-roses"><div class="sec-head"><div><span class="label">'+T("ownLabel")+'</span><h2>'+T("ownTitle")+'</h2></div></div>'+grid(own)+'</section>';
-  h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("catalog")+'</span><h2>'+T("allSel")+'</h2></div><p class="count">'+esc(L(S.settings,"tagline"))+'</p></div>'+grid(S.products)+'</section>';
+  var own = S.products.filter(function(p){ return isOwn(p) && !shown[p.id]; }).sort(function(a,b){ return (a.soldOut?1:0) - (b.soldOut?1:0); });
+  if (own.length) h += '<section class="sec" id="eyre-roses"><div class="sec-head"><div><span class="label">'+T("ownLabel")+'</span><h2>'+esc(ownBrand()).replace(/\s(\S+)$/, " <em>$1</em>")+'</h2></div></div>'+grid(own)+'</section>';
+  own.forEach(function(p){ shown[p.id] = true; });
+  var rest = S.products.filter(function(p){ return !shown[p.id]; });
+  if (rest.length) h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("catalog")+'</span><h2>'+(Object.keys(shown).length ? T("moreFinds") : T("allSel"))+'</h2></div><p class="count">'+esc(L(S.settings,"tagline"))+'</p></div>'+grid(rest)+'</section>';
   return h + '</main>' + footer();
 }
 function viewCat(id){
@@ -735,12 +826,13 @@ function viewAdmin(){
   var h = header("") + '<main class="wrap adm">';
   h += '<div class="adm-bar"><div><h1>Panel</h1><div id="save-state" class="save-state"></div></div>'+
     '<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="sbtn" href="/" style="text-decoration:none">Ver sitio</a><button class="sbtn" data-act="logout">Salir</button></div></div>';
-  var tabs = [["collections","Colecciones"],["products","Productos"],["categories","Categorías"],["settings","Bienvenida y ajustes"]];
+  var tabs = [["collections","Colecciones"],["products","Productos"],["categories","Categorías"],["policies","Políticas"],["settings","Bienvenida y ajustes"]];
   h += '<div class="tabs" role="tablist">'+tabs.map(function(t){ return '<button class="tab'+(A.tab===t[0]?' on':'')+'" data-act="tab" data-tab="'+t[0]+'">'+t[1]+'</button>'; }).join("")+'</div>';
   if (A.edit) h += A.edit.kind==="p" ? editProduct() : editCollection();
   else if (A.tab==="collections") h += listCollections();
   else if (A.tab==="products") h += listProducts();
   else if (A.tab==="categories") h += listCategories();
+  else if (A.tab==="policies") h += listPolicies();
   else h += editSettings();
   return h + '</main>';
 }
@@ -802,6 +894,8 @@ function backupsBox(){
 function shopBox(){
   var s = S.settings;
   return '<div class="editor" style="margin-top:18px"><h2>Tienda: envíos y pagos</h2><p class="hint" style="margin-top:-8px">Para tus piezas propias, las que la clienta añade al carrito.</p><div class="fgrid">'+
+    fld("s-ownBrand","Nombre de tu línea de ropa",S.settings.ownBrand||"","full","text","Eyre Roses Closet")+
+    '<div class="field full"><p class="hint">Sale en el sello dorado de cada pieza tuya y en el título de su sección, para que se entienda que es ropa.</p></div>'+
     fld("s-shipCost","Costo de envío",s.shipCost||"","","text","$8")+fld("s-freeShipFrom","Envío gratis desde (opcional)",s.freeShipFrom||"","","text","$75")+
     fld("s-whatsapp","Tu WhatsApp para pedidos (opcional)",s.whatsapp||"","full","text","+1 312 555 0000")+
     '<div class="field full"><p class="hint"><b>Pago con tarjeta: '+(PAY.stripe?'activo ✓':'todavía no activo')+'.</b> '+(PAY.stripe?'Las clientas pagan con tarjeta o Apple Pay y escriben su dirección de envío; ves cada pedido en tu cuenta de Stripe.':'Para activarlo: crea tu cuenta en stripe.com, copia tu clave secreta (empieza con sk_live_) y ponla en Netlify en Site configuration → Environment variables con el nombre STRIPE_SECRET_KEY; luego vuelve a desplegar. Mientras tanto, si pones tu WhatsApp, el carrito te manda el pedido por mensaje.')+'</p></div>'+
@@ -852,7 +946,7 @@ function editProduct(){
   var h = '<div class="editor">'+(A.back?'<button class="sbtn" data-act="cancel" style="width:fit-content">← Volver a la colección</button>':'')+'<h2>'+(A.edit.isNew?'Nuevo producto':'Editar producto')+'</h2><div class="fgrid">'+
     fld("f-name","Nombre",f.name,"full")+
     fld("f-name_en","Nombre en inglés (opcional)",f.name_en||"","full","text","Ej.: Washed linen table runner")+
-    '<div class="field"><label for="f-store">Tienda</label><select id="f-store"><option value="propia"'+(f.store==="propia"?' selected':'')+'>Eyre Roses (pieza propia)</option>'+STORES.map(function(s){return '<option'+(f.store===s?' selected':'')+'>'+s+'</option>';}).join("")+'</select></div>'+
+    '<div class="field"><label for="f-store">Tienda</label><select id="f-store"><option value="propia"'+(f.store==="propia"?' selected':'')+'>'+esc(ownBrand())+' (pieza propia)</option>'+STORES.map(function(s){return '<option'+(f.store===s?' selected':'')+'>'+s+'</option>';}).join("")+'</select></div>'+
     (f.store==="Otra"?fld("f-storeLabel","Nombre de la tienda",f.storeLabel):'')+
     '<div class="field"><label for="f-category">Categoría</label>'+catSelect("f-category",f.category)+'</div>'+
     fld("f-price",f.store==="propia"?"Precio":"Precio (opcional)",f.price,"","text","$29.99")+
@@ -890,7 +984,7 @@ function editCollection(){
   return h;
 }
 function readSettings(){
-  var s = S.settings, map = { name:"s-name", brandName:"s-brandName", tagline:"s-tagline", brandUrl:"s-brandUrl", disclosure:"s-disclosure", welcomeTitle:"s-welcomeTitle", welcomeText:"s-welcomeText", welcomeSign:"s-welcomeSign", welcomeKicker:"s-welcomeKicker", shipCost:"s-shipCost", freeShipFrom:"s-freeShipFrom", whatsapp:"s-whatsapp", welcomeText_en:"s-welcomeText_en", welcomeSign_en:"s-welcomeSign_en", welcomeKicker_en:"s-welcomeKicker_en", tagline_en:"s-tagline_en", disclosure_en:"s-disclosure_en" };
+  var s = S.settings, map = { name:"s-name", brandName:"s-brandName", tagline:"s-tagline", brandUrl:"s-brandUrl", disclosure:"s-disclosure", welcomeTitle:"s-welcomeTitle", welcomeText:"s-welcomeText", welcomeSign:"s-welcomeSign", welcomeKicker:"s-welcomeKicker", shipCost:"s-shipCost", ownBrand:"s-ownBrand", freeShipFrom:"s-freeShipFrom", whatsapp:"s-whatsapp", welcomeText_en:"s-welcomeText_en", welcomeSign_en:"s-welcomeSign_en", welcomeKicker_en:"s-welcomeKicker_en", tagline_en:"s-tagline_en", disclosure_en:"s-disclosure_en" };
   Object.keys(map).forEach(function(k){ var v = val(map[k]); if (v !== undefined){ if (/_en$/.test(k) && s[k] !== v) delete s[k+"_src"]; s[k] = v; } });
   var tag = val("s-amazonTag"); if (tag !== undefined) s.amazonTag = tag.replace(/\s+/g,"");
   if (!s.name) s.name = "Eyre Roses Decor Edit";
@@ -1025,6 +1119,14 @@ root.addEventListener("click", function(e){
       S.categories.push(nc); changed(); render(); toast(par ? "Subcategoría añadida." : "Categoría añadida."); break;
     }
     case "clear-photo": readSettings(); S.settings.welcomePhoto = ""; changed(); render(); break;
+    case "save-policies": {
+      var em = val("s-contactEmail"); if (em !== undefined) S.settings.contactEmail = em;
+      POLICIES.forEach(function(x){
+        var v = val("s-"+x.key); if (v !== undefined) S.settings[x.key] = (v === polDefault(x.key, false)) ? "" : v;
+        var ve = val("s-"+x.key+"_en"); if (ve !== undefined){ if (S.settings[x.key+"_en"] !== ve) delete S.settings[x.key+"_en_src"]; S.settings[x.key+"_en"] = ve; }
+      });
+      changed(); render(); toast("Políticas guardadas."); break;
+    }
     case "save-settings": {
       var url = val("s-brandUrl");
       if (url && !safeUrl(url)){ toast("El enlace debe empezar con https://"); break; }
@@ -1113,6 +1215,7 @@ function render(){
   if (r.view === "admin") html = viewAdmin();
   else if (r.view === "coll") html = viewColl(r.id);
   else if (r.view === "cat") html = viewCat(r.id);
+  else if (r.view === "policy") html = viewPolicy(r.id);
   else html = viewHome();
   root.innerHTML = html;
   paintSave();
@@ -1218,7 +1321,7 @@ function itemList(products){
     var it = { "@type":"ListItem", position:i+1, name:L(p,"name") };
     if (isOwn(p) && priceNum(p.price)){
       it.item = { "@type":"Product", name:L(p,"name"), image: safeImg(p.image) ? absUrl(p.image) : undefined, description: L(p,"note") || undefined,
-        brand:{ "@type":"Brand", name:"Eyre Roses" },
+        brand:{ "@type":"Brand", name:ownBrand() },
         offers:{ "@type":"Offer", price:priceNum(p.price), priceCurrency:"USD", availability: p.soldOut ? "https://schema.org/SoldOut" : "https://schema.org/InStock", url: linkFor(p) || absUrl(location.pathname) } };
     } else if (linkFor(p)) it.url = linkFor(p);
     return it;
@@ -1233,6 +1336,8 @@ function seo(r){
     var fam = familyIds(r.id), ps = S.products.filter(function(p){ return fam.indexOf(p.category)>=0; });
     title = catName(r.id) + " · " + name; desc = plainText((LANG==="en" ? "Shop " + catName(r.id) + " picked by Eyre Roses: " : catName(r.id) + " elegidos por Eyre Roses: ") + ps.slice(0,6).map(function(p){ return L(p,"name"); }).join(", "), 155); path = urlCat(r.id);
     ld = { "@context":"https://schema.org", "@type":"CollectionPage", name:catName(r.id), description:desc, url:absUrl(path), mainEntity:itemList(ps) };
+  } else if (r.view === "policy" && polBySlug(r.id)){
+    var px = polBySlug(r.id); title = polTitle(px) + " · " + name; desc = plainText(polText(px).replace(/^##\s+/gm,""), 155); path = urlPol(px);
   } else if (r.view === "admin"){
     title = "Panel · " + name;
   } else {

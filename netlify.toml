@@ -32,3 +32,13 @@
   from = "/category/*"
   to = "/index.html"
   status = 200
+
+[[redirects]]
+  from = "/politicas/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/policies/*"
+  to = "/index.html"
+  status = 200
