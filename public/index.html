@@ -210,6 +210,32 @@ button.buy{border:0;cursor:pointer;font-family:inherit}
 .wide-window{margin:0 0 8px;padding:10px;border:1px solid var(--gold);position:relative}
 .wide-window .scene{aspect-ratio:16/9}
 
+.stats-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.range{display:flex;gap:6px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.kpis div{border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;background:var(--paper);display:grid;gap:4px}
+.kpis b{font-family:var(--display);font-size:30px;font-weight:400;font-variant-numeric:tabular-nums;line-height:1}
+.stats-h{font-family:var(--body);font-size:15px;font-weight:500;margin:8px 0 2px}
+.chart-wrap{overflow-x:auto}
+.chart-wrap svg{width:100%;height:auto;display:block}
+.chart-wrap .grid{stroke:var(--line);stroke-width:1}
+.chart-wrap .tick{fill:var(--muted);font-size:11px;font-family:var(--body)}
+.chart-wrap .bar{fill:var(--rose)}
+.chart-wrap .hit{fill:transparent}
+.chart-wrap .dbar:hover .hit{fill:var(--tint)}
+@media(max-width:600px){.chart-wrap .tick{font-size:21px}}
+.stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 28px}
+.hbars{display:grid;gap:8px}
+.hbar{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;gap:10px;align-items:center;font-size:13.5px}
+.hbar-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbar-track{height:8px;background:var(--tint);border-radius:99px;overflow:hidden}
+.hbar-track i{display:block;height:100%;background:var(--rose);border-radius:99px}
+.hbar-val{font-variant-numeric:tabular-nums;color:var(--muted);min-width:4ch;text-align:right}
+.tbl-wrap{overflow-x:auto}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th{text-align:left;font-weight:500;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em;padding:6px 8px;border-bottom:1px solid var(--line)}
+.tbl td{padding:8px;border-bottom:1px solid var(--line)}
+@media (max-width:640px){ .kpis{grid-template-columns:repeat(2,minmax(0,1fr))} .stats-grid{grid-template-columns:1fr} }
 .foot-links{display:flex;flex-wrap:wrap;gap:8px 22px;border-top:1px solid var(--line);padding-top:24px;font-size:14px}
 .foot-links a{text-decoration:none;color:var(--ink)}
 .foot-links a:hover{color:var(--rose)}
@@ -660,7 +686,7 @@ function card(p, n){
   var allSold = sizes.length && sizes.every(function(z){ return soldS.indexOf(z.toLowerCase())>=0; });
   if (own && (p.soldOut || allSold)) btn = '<span class="buy sold">'+T("soldOut")+'</span>';
   else if (own) btn = priceNum(p.price) ? '<button type="button" class="buy" data-cart="add" data-pid="'+esc(p.id)+'"'+(sizes.length?' data-needsize="1"':'')+'>'+T("addToBag")+'</button>' : '<span class="pnote">'+T("linkPending")+'</span>';
-  else if (url) btn = '<a class="buy" href="'+esc(url)+'" target="_blank" rel="sponsored noopener noreferrer">'+T("shopOn")+esc(storeShown(p))+' '+ARROW+'</a>';
+  else if (url) btn = '<a class="buy" data-track="'+esc(p.id)+'" href="'+esc(url)+'" target="_blank" rel="sponsored noopener noreferrer">'+T("shopOn")+esc(storeShown(p))+' '+ARROW+'</a>';
   else btn = '<span class="pnote">'+T("linkPending")+'</span>';
   return '<article class="pcard'+(own?' own':'')+'"><div class="pimg">'+(img?'<img src="'+esc(img)+'" alt="'+esc(name)+'" loading="lazy">':phProduct(p))+
     (n?'<span class="pnum">'+n+'</span>':'')+(own?'<span class="badge own-badge">'+esc(ownBrand())+'</span>':(p.example?'<span class="badge">'+T("example")+'</span>':''))+
@@ -675,6 +701,38 @@ function ccard(c){
   var n = collProducts(c).length;
   return '<a class="ccard" href="'+esc(urlColl(c))+'"><div class="scene">'+sceneImg(c)+'</div><span class="label">'+esc(L(c,"kicker")||catName(c.category))+(c.example?' · '+T("example"):'')+'</span><h3>'+esc(L(c,"title"))+'</h3><p>'+n+' '+(n===1?T("piece"):T("pieces"))+T("toBuy")+'</p></a>';
 }
+
+
+/* ---------- anonymous visit counting ---------- */
+function todayLocal(){ var d = new Date(); return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(); }
+function trafficSource(){
+  var ua = navigator.userAgent || "", q = new URLSearchParams(location.search), utm = (q.get("utm_source")||"").toLowerCase(), ref = "";
+  try { ref = document.referrer ? new URL(document.referrer).hostname.replace(/^www\./,"").toLowerCase() : ""; } catch(e){}
+  if (ref === location.hostname) ref = "";
+  var t = utm + " " + ref;
+  if (/Instagram/i.test(ua) || /instagram|ig\b/.test(t)) return "Instagram";
+  if (/FBAN|FBAV|FB_IAB/i.test(ua) || /facebook|fb\.|\bfb\b/.test(t)) return "Facebook";
+  if (/musical_ly|TikTok|BytedanceWebview/i.test(ua) || /tiktok/.test(t)) return "TikTok";
+  if (/Pinterest/i.test(ua) || /pinterest|pin\.it/.test(t)) return "Pinterest";
+  if (/whatsapp|wa\.me/.test(t)) return "WhatsApp";
+  if (/youtube|youtu\.be/.test(t)) return "YouTube";
+  if (/google\./.test(t) || utm === "google") return "Google";
+  if (/bing\.|yahoo\.|duckduckgo/.test(t)) return "Otros buscadores";
+  if (/t\.co|twitter|x\.com/.test(t)) return "X / Twitter";
+  if (utm) return utm.slice(0, 24);
+  if (ref) return ref.slice(0, 24);
+  return "Directo";
+}
+var SRC = trafficSource(), lastTracked = null;
+function isOwner(){ return canEdit || lsGet("vc-owner") === "1"; }
+function track(type, extra){
+  if (isOwner() || navigator.webdriver) return;
+  var b = { t:type, p:location.pathname, s:SRC };
+  if (extra) for (var k in extra) b[k] = extra[k];
+  if (type === "view"){ var td = todayLocal(); if (lsGet("vc-day") !== td){ b.nv = 1; lsSet("vc-day", td); } }
+  try { fetch("/api/t", { method:"POST", body:JSON.stringify(b), keepalive:true, headers:{ "content-type":"text/plain" } }).catch(function(){}); } catch(e){}
+}
+document.addEventListener("click", function(e){ var a = e.target.closest && e.target.closest("a[data-track]"); if (a) track("click", { pid:a.getAttribute("data-track") }); }, true);
 
 /* ---------- policy pages ---------- */
 var POLICIES = [
@@ -701,8 +759,8 @@ function polDefault(key, en){
       ? "## Returns and exchanges\nYou can request a size exchange or a return within 14 days of receiving your order.\n\n## Conditions\n- The piece must be unworn, unwashed and with its tags.\n- Pieces marked as final sale can't be exchanged or returned.\n- If a piece arrives damaged or isn't what you ordered, we'll replace it at no cost.\n\n## How to do it\nWrite to us from the Contact page with your name and order number and we'll tell you how to send it. Return shipping is paid by the customer unless the mistake was ours.\n\n## Refunds\nOnce we receive and check the piece, we refund the original payment method within 5 to 10 business days. The original shipping cost isn't refunded.\n\n## Amazon and other stores\nReturns of products bought on Amazon or other stores are handled directly with that store, under its own policies."
       : "## Cambios y devoluciones\nPuedes pedir un cambio de talla o una devolución dentro de los 14 días después de recibir tu pedido.\n\n## Condiciones\n- La pieza debe estar sin usar, sin lavar y con sus etiquetas.\n- Las piezas marcadas como venta final no tienen cambio ni devolución.\n- Si la pieza llegó dañada o no es la que pediste, te la cambiamos sin costo.\n\n## Cómo hacerlo\nEscríbenos desde la página de Contacto con tu nombre y tu número de pedido, y te diremos cómo enviarla. El envío de regreso lo paga la clienta, salvo que el error sea nuestro.\n\n## Reembolsos\nCuando recibamos y revisemos la pieza, hacemos el reembolso al mismo método de pago en 5 a 10 días hábiles. El costo del envío original no se reembolsa.\n\n## Compras en Amazon y otras tiendas\nLas devoluciones de productos comprados en Amazon u otras tiendas se hacen directamente con esa tienda, según sus propias políticas.",
     policyPrivacy: en
-      ? "## What we use\nWhen you buy a piece from " + brand + ", the payment is processed by Stripe. We never see or store your card details. We receive your name, email, phone and shipping address only to prepare and ship your order.\n\n## Orders by WhatsApp\nIf you order by WhatsApp, we use your number and the details you share only to handle that order.\n\n## Your browser\nThis site keeps your bag and your chosen language in your browser so they aren't lost. We don't use advertising trackers of our own.\n\n## Affiliate links\nSome links lead to Amazon and other stores. If you buy there, that store may use cookies under its own privacy policy, and we may earn a commission at no extra cost to you.\n\n## Your data\nYou can ask us to see or delete your information by writing to us from the Contact page. We never sell your data."
-      : "## Qué información usamos\nCuando compras una pieza de " + brand + ", el pago lo procesa Stripe. Nosotros nunca vemos ni guardamos los datos de tu tarjeta. Recibimos tu nombre, correo, teléfono y dirección de envío solo para preparar y enviar tu pedido.\n\n## Pedidos por WhatsApp\nSi haces tu pedido por WhatsApp, usamos tu número y los datos que nos compartas solo para atender ese pedido.\n\n## Tu navegador\nEsta web guarda en tu navegador tu carrito y el idioma que elegiste, para que no se pierdan. No usamos herramientas de publicidad propias.\n\n## Enlaces de afiliados\nAlgunos enlaces llevan a Amazon y otras tiendas. Si compras ahí, esa tienda puede usar cookies según su propia política de privacidad, y nosotros podemos recibir una comisión sin costo extra para ti.\n\n## Tus datos\nPuedes pedirnos ver o borrar tu información escribiéndonos desde la página de Contacto. Nunca vendemos tus datos.",
+      ? "## What we use\nWhen you buy a piece from " + brand + ", the payment is processed by Stripe. We never see or store your card details. We receive your name, email, phone and shipping address only to prepare and ship your order.\n\n## Orders by WhatsApp\nIf you order by WhatsApp, we use your number and the details you share only to handle that order.\n\n## Your browser\nThis site keeps your bag and your chosen language in your browser so they aren't lost. We count visits anonymously (the page you see, which network you came from and your approximate country) without cookies or personal data, and we don't use advertising trackers.\n\n## Affiliate links\nSome links lead to Amazon and other stores. If you buy there, that store may use cookies under its own privacy policy, and we may earn a commission at no extra cost to you.\n\n## Your data\nYou can ask us to see or delete your information by writing to us from the Contact page. We never sell your data."
+      : "## Qué información usamos\nCuando compras una pieza de " + brand + ", el pago lo procesa Stripe. Nosotros nunca vemos ni guardamos los datos de tu tarjeta. Recibimos tu nombre, correo, teléfono y dirección de envío solo para preparar y enviar tu pedido.\n\n## Pedidos por WhatsApp\nSi haces tu pedido por WhatsApp, usamos tu número y los datos que nos compartas solo para atender ese pedido.\n\n## Tu navegador\nEsta web guarda en tu navegador tu carrito y el idioma que elegiste, para que no se pierdan. Contamos las visitas de forma anónima (la página que ves, de qué red llegaste y tu país aproximado), sin cookies ni datos personales, y no usamos herramientas de publicidad.\n\n## Enlaces de afiliados\nAlgunos enlaces llevan a Amazon y otras tiendas. Si compras ahí, esa tienda puede usar cookies según su propia política de privacidad, y nosotros podemos recibir una comisión sin costo extra para ti.\n\n## Tus datos\nPuedes pedirnos ver o borrar tu información escribiéndonos desde la página de Contacto. Nunca vendemos tus datos.",
     policyContact: en
       ? "Have a question about a piece, your size or your order? Write to us and we'll get back to you as soon as we can."
       : "¿Tienes una pregunta sobre una pieza, tu talla o tu pedido? Escríbenos y te respondemos lo antes posible."
@@ -735,6 +793,65 @@ function viewPolicy(sl){
   var h = header("") + '<main class="wrap policy"><p class="crumb"><a href="/">'+T("home")+'</a></p><div class="chead"><span class="label">'+esc(siteName())+'</span><h1>'+esc(polTitle(x))+'</h1></div><article class="policy-body">'+richText(polText(x))+(x.key === "policyContact" ? contactBlock() : "")+'</article>';
   h += '<nav class="policy-nav">'+POLICIES.filter(function(y){ return y !== x; }).map(function(y){ return '<a href="'+urlPol(y)+'">'+esc(polTitle(y))+'</a>'; }).join("")+'</nav>';
   return h + '</main>' + footer();
+}
+
+/* ---------- statistics (owner panel) ---------- */
+function loadStats(days){
+  A.stats = { days:days, loading:true }; render();
+  api("/api/stats?days=" + days).then(function(r){ A.stats = { days:days, rows:(r && r.days) || [] }; render(); })
+    .catch(function(){ A.stats = { days:days, rows:[], error:true }; render(); });
+}
+function sumMap(rows, k){ var o = {}; rows.forEach(function(r){ var m = r[k] || {}; Object.keys(m).forEach(function(x){ o[x] = (o[x]||0) + m[x]; }); }); return o; }
+function topList(map, label, n){
+  var arr = Object.keys(map).map(function(k){ return [k, map[k]]; }).sort(function(a,b){ return b[1]-a[1]; }).slice(0, n||8);
+  if (!arr.length) return '<p class="hint">Todavía no hay datos.</p>';
+  var max = arr[0][1];
+  return '<div class="hbars">'+arr.map(function(a){ return '<div class="hbar"><span class="hbar-name">'+esc(label ? label(a[0]) : a[0])+'</span><span class="hbar-track"><i style="width:'+Math.max(2, a[1]/max*100).toFixed(1)+'%"></i></span><span class="hbar-val">'+a[1]+'</span></div>'; }).join("")+'</div>';
+}
+function pageName(path){
+  var m;
+  if (path === "/" || !path) return "Portada";
+  if ((m = path.match(/^\/coleccion\/(.+)$/))){ var id = m[1].slice(m[1].lastIndexOf("-")+1), c = coll(id); return "Colección: " + (c ? c.title : m[1]); }
+  if ((m = path.match(/^\/categoria\/(.+)$/))) return "Categoría: " + catLabel(m[1]);
+  if ((m = path.match(/^\/politicas\/(.+)$/))){ var x = polBySlug(m[1]); return x ? x.es_t : path; }
+  return path;
+}
+function prodName(id){ var p = prod(id); return p ? p.name : "(producto borrado)"; }
+function dayChart(rows){
+  var W = 720, H = 230, L = 34, B = 36, T = 12, R = 8, n = rows.length;
+  var vals = rows.map(function(r){ return r.u || 0; }), max = Math.max(4, Math.max.apply(null, vals));
+  var step = Math.pow(10, Math.floor(Math.log10(max))), nice = Math.ceil(max / step) * step; if (nice / step > 5) step *= 2; nice = Math.ceil(max / step) * step;
+  var bw = (W - L - R) / n, y = function(v){ return T + (H - T - B) * (1 - v / nice); };
+  var g = '';
+  for (var t = 0; t <= nice; t += step) g += '<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(t)+'" y2="'+y(t)+'" class="grid"/><text x="'+(L-6)+'" y="'+(y(t)+4)+'" class="tick" text-anchor="end">'+t+'</text>';
+  var every = Math.ceil(n / 7);
+  rows.forEach(function(r, i){
+    var v = r.u || 0, x = L + i * bw, w = Math.max(1, bw - 2), top = y(v), hgt = (H - B) - top;
+    var dt = new Date(r.date + "T12:00:00"), lab = dt.toLocaleDateString("es", { day:"numeric", month:"short" });
+    g += '<g class="dbar"><rect x="'+x+'" y="'+T+'" width="'+bw+'" height="'+(H-T-B)+'" class="hit"/>'+(v ? '<path d="M'+(x+1)+','+(H-B)+' V'+(top+Math.min(4,hgt))+' q0,-4 4,-4 h'+Math.max(0,w-8)+' q4,0 4,4 V'+(H-B)+' Z" class="bar"/>' : '')+'<title>'+lab+': '+v+(v===1?' visitante':' visitantes')+' · '+(r.v||0)+' páginas vistas</title></g>';
+    if (i % every === 0) g += '<text x="'+(x + bw/2)+'" y="'+(H-6)+'" class="tick" text-anchor="middle">'+lab+'</text>';
+  });
+  return '<div class="chart-wrap"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Visitantes por día">'+g+'</svg></div>';
+}
+function viewStats(){
+  var st = A.stats;
+  if (!st){ setTimeout(function(){ loadStats(30); }, 0); return '<div class="editor"><p class="prog">Cargando estadísticas…</p></div>'; }
+  var h = '<div class="editor stats"><div class="stats-head"><h2>Estadísticas</h2><div class="range" role="group" aria-label="Periodo">'+[7,30,90].map(function(d){ return '<button type="button" class="sbtn'+(st.days===d?' pri':'')+'" data-act="stats-range" data-days="'+d+'">'+d+' días</button>'; }).join("")+'</div></div>';
+  if (st.loading) return h + '<p class="prog">Cargando…</p></div>';
+  if (st.error) return h + '<p class="hint">No se pudieron cargar las estadísticas. Inténtalo de nuevo en un momento.</p></div>';
+  var rows = st.rows, tot = function(k){ return rows.reduce(function(n, r){ return n + (r[k]||0); }, 0); };
+  var ck = sumMap(rows, "ck"), ct = sumMap(rows, "ct"), sum = function(m){ return Object.keys(m).reduce(function(n,k){ return n + m[k]; }, 0); };
+  var dev = sumMap(rows, "dev"), devTot = (dev.m||0) + (dev.d||0);
+  h += '<div class="kpis"><div><span class="label">Visitantes</span><b>'+tot("u")+'</b></div><div><span class="label">Páginas vistas</span><b>'+tot("v")+'</b></div><div><span class="label">Clics a tiendas</span><b>'+sum(ck)+'</b></div><div><span class="label">Añadidos al carrito</span><b>'+sum(ct)+'</b></div></div>';
+  h += '<h3 class="stats-h">Visitantes por día</h3>' + dayChart(rows);
+  h += '<p class="hint">Cada persona cuenta una vez por día, aunque vea varias páginas. Tus propias visitas no se cuentan.'+(devTot ? ' Desde el celular: '+Math.round((dev.m||0)/devTot*100)+'%.' : '')+'</p>';
+  var months = {}; rows.forEach(function(r){ var m = r.date.slice(0,7); months[m] = months[m] || { u:0, v:0, c:0 }; months[m].u += r.u||0; months[m].v += r.v||0; months[m].c += sum(r.ck||{}); });
+  h += '<h3 class="stats-h">Por mes</h3><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Mes</th><th>Visitantes</th><th>Páginas vistas</th><th>Clics a tiendas</th></tr></thead><tbody>'+Object.keys(months).sort().reverse().map(function(m){ var d = new Date(m + "-15T12:00:00"); return '<tr><td>'+["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"][d.getMonth()]+" "+d.getFullYear()+'</td><td>'+months[m].u+'</td><td>'+months[m].v+'</td><td>'+months[m].c+'</td></tr>'; }).join("")+'</tbody></table></div>';
+  h += '<div class="stats-grid"><div><h3 class="stats-h">De dónde llegan</h3>'+topList(sumMap(rows, "src"))+'</div><div><h3 class="stats-h">Países</h3>'+topList(sumMap(rows, "co"), function(k){ return k === "?" ? "Sin dato" : k; })+'</div>';
+  h += '<div><h3 class="stats-h">Ciudades</h3>'+topList(sumMap(rows, "ci"))+'</div><div><h3 class="stats-h">Páginas más vistas</h3>'+topList(sumMap(rows, "pg"), pageName)+'</div>';
+  h += '<div><h3 class="stats-h">Productos con más clics</h3>'+topList(ck, prodName)+'</div><div><h3 class="stats-h">Más añadidos al carrito</h3>'+topList(ct, prodName)+'</div></div>';
+  h += '<p class="hint" style="margin-top:6px">Consejo: para saber exactamente de qué publicación llegan, agrega <b>?utm_source=nombre</b> al link. Por ejemplo, en tu bio de Instagram: <span style="user-select:all">'+esc(location.origin)+'/?utm_source=instagram-bio</span></p>';
+  return h + '</div>';
 }
 function listPolicies(){
   var s = S.settings, h = '<div class="editor"><h2>Políticas de tu tienda</h2><p class="hint" style="margin-top:-8px">Estas páginas salen al pie de tu web. Ya traen un texto sugerido; cámbialo a tu gusto. Usa «## » al inicio de una línea para un subtítulo y «- » para una lista. Revísalas con calma: no son asesoría legal.</p><div class="fgrid">'+
@@ -826,13 +943,14 @@ function viewAdmin(){
   var h = header("") + '<main class="wrap adm">';
   h += '<div class="adm-bar"><div><h1>Panel</h1><div id="save-state" class="save-state"></div></div>'+
     '<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="sbtn" href="/" style="text-decoration:none">Ver sitio</a><button class="sbtn" data-act="logout">Salir</button></div></div>';
-  var tabs = [["collections","Colecciones"],["products","Productos"],["categories","Categorías"],["policies","Políticas"],["settings","Bienvenida y ajustes"]];
+  var tabs = [["collections","Colecciones"],["products","Productos"],["categories","Categorías"],["policies","Políticas"],["stats","Estadísticas"],["settings","Bienvenida y ajustes"]];
   h += '<div class="tabs" role="tablist">'+tabs.map(function(t){ return '<button class="tab'+(A.tab===t[0]?' on':'')+'" data-act="tab" data-tab="'+t[0]+'">'+t[1]+'</button>'; }).join("")+'</div>';
   if (A.edit) h += A.edit.kind==="p" ? editProduct() : editCollection();
   else if (A.tab==="collections") h += listCollections();
   else if (A.tab==="products") h += listProducts();
   else if (A.tab==="categories") h += listCategories();
   else if (A.tab==="policies") h += listPolicies();
+  else if (A.tab==="stats") h += viewStats();
   else h += editSettings();
   return h + '</main>';
 }
@@ -1070,7 +1188,7 @@ function login(e){
   A.loggingIn = true; A.loginErr = ""; render();
   pw = given;
   api("/api/login", { method: "POST" }).then(function(){
-    canEdit = true; A.loggingIn = false; setTimeout(autoTranslate, 1200);
+    canEdit = true; A.loggingIn = false; lsSet("vc-owner", "1"); setTimeout(autoTranslate, 1200);
     if (remember) lsSet(PW_KEY, pw); else ssSet(PW_KEY, pw);
     render();
   }).catch(function(err){
@@ -1089,7 +1207,7 @@ root.addEventListener("click", function(e){
   if (act !== "del") A.armed = null;
   syncForm();
   switch(act){
-    case "tab": A.tab = b.getAttribute("data-tab"); A.edit = null; A.back = null; render(); break;
+    case "tab": if (b.getAttribute("data-tab") === "stats") A.stats = null; A.tab = b.getAttribute("data-tab"); A.edit = null; A.back = null; render(); break;
     case "new-p": startEdit("p"); break;
     case "new-c": startEdit("c"); break;
     case "edit": startEdit(kind, id); break;
@@ -1119,6 +1237,7 @@ root.addEventListener("click", function(e){
       S.categories.push(nc); changed(); render(); toast(par ? "Subcategoría añadida." : "Categoría añadida."); break;
     }
     case "clear-photo": readSettings(); S.settings.welcomePhoto = ""; changed(); render(); break;
+    case "stats-range": loadStats(+b.getAttribute("data-days")); break;
     case "save-policies": {
       var em = val("s-contactEmail"); if (em !== undefined) S.settings.contactEmail = em;
       POLICIES.forEach(function(x){
@@ -1222,6 +1341,7 @@ function render(){
   paintBagCount();
   if (document.getElementById("bag") && !document.getElementById("bag").hidden) renderBag();
   seo(r);
+  if (r.view !== "admin" && location.pathname !== lastTracked){ lastTracked = location.pathname; track("view"); }
 }
 /* Size picker and bag (cart) */
 var CART = (function(){ try { var c = JSON.parse(localStorage.getItem("vc-cart")||"[]"); return Array.isArray(c) ? c : []; } catch(e){ return []; } })();
@@ -1285,6 +1405,7 @@ document.addEventListener("click", function(e){
     var card2 = c.closest(".pcard"), on = card2 && card2.querySelector(".size.on");
     if (c.getAttribute("data-needsize") && !on){ toast(T("pickSize")); var first = card2.querySelector(".size:not([disabled])"); if (first) first.focus(); return; }
     addToCart(c.getAttribute("data-pid"), on ? on.getAttribute("data-size") : "");
+    track("cart", { pid:c.getAttribute("data-pid") });
   }
   else if (act === "open") openBag();
   else if (act === "close") closeBag();
