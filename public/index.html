@@ -123,6 +123,28 @@ h1,h2,h3{font-family:var(--display);font-weight:500;text-wrap:balance;margin:0;l
 .sec-head h2{font-size:clamp(26px,3.4vw,38px);font-weight:400}
 .sec-head h2 em{color:var(--rose)}
 .sec-head .label{display:block;margin-bottom:6px}
+/* Shop-the-look list: pieces without their own photo, each on a soft colored tile */
+.look{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.look.after{margin-top:30px}
+.lrow{--tile:#F6E8EA;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 16px 14px 14px;background:var(--tile);border-radius:14px;border:1px solid color-mix(in srgb,var(--gold) 28%,transparent);position:relative}
+.lrow:nth-child(even){--tile:#F5EDE1}
+.lnum{width:38px;height:38px;border-radius:50%;background:var(--rose);color:var(--rose-ink);display:grid;place-items:center;font-family:var(--display);font-style:italic;font-size:18px;box-shadow:0 0 0 3px var(--surface),0 0 0 4px color-mix(in srgb,var(--gold) 55%,transparent)}
+.lnum.dot{width:12px;height:12px;margin:0 6px}
+.ltext{min-width:0}
+.ltext .label{display:block;font-size:10.5px;color:var(--rose);opacity:.85}
+.ltext h3{font-family:var(--body);font-size:15.5px;font-weight:500;line-height:1.3;margin:3px 0 0;color:var(--ink);overflow-wrap:anywhere}
+.ltext p{font-size:13px;color:var(--muted);margin:3px 0 0;line-height:1.4}
+.lbuy{padding:9px 16px}
+@media(max-width:520px){
+  .look{grid-template-columns:1fr}
+  .lrow{grid-template-columns:auto minmax(0,1fr);row-gap:10px}
+  .lbuy{grid-column:2;justify-self:start}
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lrow{--tile:#2C2125}:root:not([data-theme="light"]) .lrow:nth-child(even){--tile:#2A2420}}
+:root[data-theme="dark"] .lrow{--tile:#2C2125}:root[data-theme="dark"] .lrow:nth-child(even){--tile:#2A2420}
+.bulk{margin-top:14px;border:1px dashed var(--line);border-radius:var(--radius);padding:12px 14px;background:var(--surface)}
+.bulk summary{cursor:pointer;font-weight:500;color:var(--rose)}
+.bulk textarea{width:100%;min-height:150px;margin:8px 0}
 .empty{padding:40px 20px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--radius)}
 
 /* Product cards */
@@ -610,13 +632,13 @@ function uploadImage(file, max){
 var LANG = (function(){ var v = lsGet("vc-lang"); if (v === "es" || v === "en") return v; var n = (navigator.language||"es").toLowerCase(); return n.indexOf("es")===0 ? "es" : "en"; })();
 var TX = {
   es: { all:"Todo", cats:"Categorías", admin:"Administrar", photoPending:"Foto pendiente",
-        example:"Ejemplo", exampleContent:"Contenido de ejemplo", shopOn:"Ver en ", linkPending:"Enlace pendiente", buyOwn:"Comprar", addToBag:"Añadir al carrito", bag:"Carrito", bagEmpty:"Tu carrito está vacío.", subtotal:"Subtotal", shipping:"Envío", freeShipFrom:"Envío gratis desde ", shipFree:"Gratis", shipAtPay:"El envío se suma al pagar.", checkout:"Pagar", orderWa:"Hacer pedido por WhatsApp", keepShopping:"Seguir mirando", added:"Añadido al carrito", removeItem:"Quitar", thanks:"¡Gracias por tu compra! Te llegará la confirmación por correo.", payOff:"El pago en línea todavía no está activo.", paying:"Abriendo el pago…", sizeLabel:"Talla", pickSize:"Elige tu talla primero", soldOut:"Agotada", ownBadge:"Eyre Roses", ownPiece:"Exclusivo", ownTitle:"Colección <em>Eyre Roses</em>", ownLabel:"Ropa seleccionada por mí", noProducts:"Todavía no hay productos aquí.",
+        example:"Ejemplo", exampleContent:"Contenido de ejemplo", shopOn:"Ver en ", shopShort:"Comprar", linkPending:"Enlace pendiente", buyOwn:"Comprar", addToBag:"Añadir al carrito", bag:"Carrito", bagEmpty:"Tu carrito está vacío.", subtotal:"Subtotal", shipping:"Envío", freeShipFrom:"Envío gratis desde ", shipFree:"Gratis", shipAtPay:"El envío se suma al pagar.", checkout:"Pagar", orderWa:"Hacer pedido por WhatsApp", keepShopping:"Seguir mirando", added:"Añadido al carrito", removeItem:"Quitar", thanks:"¡Gracias por tu compra! Te llegará la confirmación por correo.", payOff:"El pago en línea todavía no está activo.", paying:"Abriendo el pago…", sizeLabel:"Talla", pickSize:"Elige tu talla primero", soldOut:"Agotada", ownBadge:"Eyre Roses", ownPiece:"Exclusivo", ownTitle:"Colección <em>Eyre Roses</em>", ownLabel:"Ropa seleccionada por mí", noProducts:"Todavía no hay productos aquí.",
         piece:"pieza", pieces:"piezas", toBuy:" para comprar", welcome:"Bienvenida", founderPhoto:"Foto de la fundadora", seeRooms:"Ver los ambientes", meet:"Conóceme",
         featured:"Colección destacada", shopRoom:"Descubrir la colección", inScene:" piezas en esta escena", seenInScene:"Lo que ves en la escena", pieceBy:"Pieza por <em>pieza</em>",
         collections:"Colecciones", rooms:"Ambientes", moreColl:"Más <em>colecciones</em>", catalog:"Catálogo", allSel:"Toda la <em>selección</em>", moreFinds:"Más de la <em>selección</em>",
         category:"Categoría", products:" productos", roomsN:" ambientes", home:"Inicio", collection:"Colección", shopThis:"Compra este <em>ambiente</em>", noCat:"Sin categoría", allProducts:"Todos los productos", store:"la tienda" },
   en: { all:"All", cats:"Categories", admin:"Admin", photoPending:"Photo coming soon",
-        example:"Sample", exampleContent:"Sample content", shopOn:"Shop on ", linkPending:"Link coming soon", buyOwn:"Buy now", addToBag:"Add to bag", bag:"Bag", bagEmpty:"Your bag is empty.", subtotal:"Subtotal", shipping:"Shipping", freeShipFrom:"Free shipping from ", shipFree:"Free", shipAtPay:"Shipping is added at checkout.", checkout:"Checkout", orderWa:"Order via WhatsApp", keepShopping:"Keep browsing", added:"Added to your bag", removeItem:"Remove", thanks:"Thank you for your order! Your confirmation is on its way by email.", payOff:"Online payment isn't active yet.", paying:"Opening checkout…", sizeLabel:"Size", pickSize:"Choose your size first", soldOut:"Sold out", ownBadge:"Eyre Roses", ownPiece:"Exclusive", ownTitle:"The Eyre Roses <em>collection</em>", ownLabel:"Clothing I hand-picked", noProducts:"No products here yet.",
+        example:"Sample", exampleContent:"Sample content", shopOn:"Shop on ", shopShort:"Shop", linkPending:"Link coming soon", buyOwn:"Buy now", addToBag:"Add to bag", bag:"Bag", bagEmpty:"Your bag is empty.", subtotal:"Subtotal", shipping:"Shipping", freeShipFrom:"Free shipping from ", shipFree:"Free", shipAtPay:"Shipping is added at checkout.", checkout:"Checkout", orderWa:"Order via WhatsApp", keepShopping:"Keep browsing", added:"Added to your bag", removeItem:"Remove", thanks:"Thank you for your order! Your confirmation is on its way by email.", payOff:"Online payment isn't active yet.", paying:"Opening checkout…", sizeLabel:"Size", pickSize:"Choose your size first", soldOut:"Sold out", ownBadge:"Eyre Roses", ownPiece:"Exclusive", ownTitle:"The Eyre Roses <em>collection</em>", ownLabel:"Clothing I hand-picked", noProducts:"No products here yet.",
         piece:"piece", pieces:"pieces", toBuy:" to shop", welcome:"Welcome", founderPhoto:"Photo of the founder", seeRooms:"Explore the rooms", meet:"Meet me",
         featured:"Featured collection", shopRoom:"Discover the collection", inScene:" pieces in this scene", seenInScene:"Everything in the scene", pieceBy:"Piece by <em>piece</em>",
         collections:"Collections", rooms:"Rooms", moreColl:"More <em>collections</em>", catalog:"Catalog", allSel:"The full <em>edit</em>", moreFinds:"More from the <em>edit</em>",
@@ -695,7 +717,19 @@ function card(p, n){
     (sizes.length && !p.soldOut && !allSold ? '<div class="sizes" role="group" aria-label="'+T("sizeLabel")+'">'+sizes.map(function(z){ var gone = soldS.indexOf(z.toLowerCase())>=0; return '<button type="button" class="size" data-size="'+esc(z)+'" data-pid="'+esc(p.id)+'"'+(gone?' disabled title="'+T("soldOut")+'"':'')+'>'+esc(z)+'</button>'; }).join("")+'</div>' : '')+
     '<div class="prow"><span class="price">'+esc(p.price||"")+'</span>'+btn+'</div></div></article>';
 }
-function grid(list, numbered){ return list.length ? '<div class="grid">'+list.map(function(p,i){ return card(p, numbered?i+1:0); }).join("")+'</div>' : '<p class="empty">'+T("noProducts")+'</p>'; }
+function hasPhoto(p){ return !!safeImg(p.image) || isOwn(p); }
+function lookRow(p, n){
+  var url = linkFor(p), name = L(p,"name"), note = L(p,"note");
+  var btn = url ? '<a class="buy lbuy" data-track="'+esc(p.id)+'" href="'+esc(url)+'" target="_blank" rel="sponsored noopener noreferrer" aria-label="'+esc(T("shopOn")+storeShown(p)+": "+name)+'">'+T("shopShort")+' '+ARROW+'</a>' : '<span class="pnote">'+T("linkPending")+'</span>';
+  return '<li class="lrow">'+(n?'<span class="lnum">'+n+'</span>':'<span class="lnum dot" aria-hidden="true"></span>')+'<div class="ltext"><span class="label">'+esc(storeShown(p))+' · '+esc(catName(p.category))+'</span><h3>'+esc(name)+'</h3>'+(note?'<p>'+esc(note)+'</p>':'')+'</div>'+btn+'</li>';
+}
+function grid(list, numbered){
+  if (!list.length) return '<p class="empty">'+T("noProducts")+'</p>';
+  var pics = list.filter(hasPhoto), rows = list.filter(function(p){ return !hasPhoto(p); });
+  var h = pics.length ? '<div class="grid">'+pics.map(function(p,i){ return card(p, numbered?i+1:0); }).join("")+'</div>' : '';
+  if (rows.length) h += '<ol class="look'+(pics.length?' after':'')+'">'+rows.map(function(p,i){ return lookRow(p, numbered ? pics.length+i+1 : 0); }).join("")+'</ol>';
+  return h;
+}
 function collProducts(c){ return (c.productIds||[]).map(prod).filter(Boolean); }
 function ccard(c){
   var n = collProducts(c).length;
@@ -979,7 +1013,7 @@ function listProducts(){
     var inC = S.collections.filter(function(c){return (c.productIds||[]).indexOf(p.id)>=0;}).length;
     h += '<div class="arow">'+thumb(p.image, phProduct(p))+'<div class="ainfo"><b>'+esc(p.name)+'</b><small>'+esc(storeName(p))+' · '+esc(catLabel(p.category))+(inC?' · en '+inC+(inC===1?' colección':' colecciones'):'')+(linkFor(p)?'':' · sin enlace')+(p.example?' · Ejemplo':'')+'</small></div><div class="aact">'+
       (filtered?'':'<button class="sbtn icon" data-act="move" data-kind="p" data-id="'+p.id+'" data-d="-1"'+(i===0?' disabled':'')+' aria-label="Subir">↑</button><button class="sbtn icon" data-act="move" data-kind="p" data-id="'+p.id+'" data-d="1"'+(i===S.products.length-1?' disabled':'')+' aria-label="Bajar">↓</button>')+
-      '<button class="sbtn pri" data-act="edit" data-kind="p" data-id="'+p.id+'">Editar foto y link</button></div></div>';
+      '<button class="sbtn pri" data-act="edit" data-kind="p" data-id="'+p.id+'">Editar</button></div></div>';
   });
   return h + '</div>';
 }
@@ -1093,10 +1127,14 @@ function editCollection(){
     imgPicker(f,true)+
     '<div class="field full"><label>Productos en esta escena, en orden</label>';
   if (f.productIds.length){
-    h += '<div class="inlist">'+f.productIds.map(function(id,i){ var p = prod(id); if(!p) return ""; return '<div class="arow"><span class="n">'+(i+1)+'</span>'+thumb(p.image,phProduct(p))+'<div class="ainfo"><b>'+esc(p.name)+'</b><small>'+esc(storeName(p))+'</small></div><div class="aact"><button class="sbtn icon" data-act="cmove" data-i="'+i+'" data-d="-1"'+(i===0?' disabled':'')+' aria-label="Subir">↑</button><button class="sbtn icon" data-act="cmove" data-i="'+i+'" data-d="1"'+(i===f.productIds.length-1?' disabled':'')+' aria-label="Bajar">↓</button><button class="sbtn pri" data-act="cedit-p" data-i="'+i+'">Editar foto y link</button><button class="sbtn" data-act="cremove" data-i="'+i+'">Quitar</button></div></div>'; }).join("")+'</div>';
+    h += '<div class="inlist">'+f.productIds.map(function(id,i){ var p = prod(id); if(!p) return ""; return '<div class="arow"><span class="n">'+(i+1)+'</span>'+thumb(p.image,phProduct(p))+'<div class="ainfo"><b>'+esc(p.name)+'</b><small>'+esc(storeName(p))+'</small></div><div class="aact"><button class="sbtn icon" data-act="cmove" data-i="'+i+'" data-d="-1"'+(i===0?' disabled':'')+' aria-label="Subir">↑</button><button class="sbtn icon" data-act="cmove" data-i="'+i+'" data-d="1"'+(i===f.productIds.length-1?' disabled':'')+' aria-label="Bajar">↓</button><button class="sbtn pri" data-act="cedit-p" data-i="'+i+'">Editar</button><button class="sbtn" data-act="cremove" data-i="'+i+'">Quitar</button></div></div>'; }).join("")+'</div>';
   } else h += '<p class="hint">Aún no hay productos en esta colección.</p>';
   var avail = S.products.filter(function(p){ return f.productIds.indexOf(p.id)<0; });
-  h += '<div class="tools" style="margin:10px 0 0"><button class="sbtn pri" data-act="cnew-p">Nuevo producto para esta escena</button></div>';
+  h += '<details class="bulk"'+(f.productIds.length?'':' open')+'><summary>Pegar varias piezas de una vez (rápido)</summary>'+
+    '<p class="hint">Una pieza por línea: el nombre y el link de Amazon (o el número ASIN). No necesitas foto: debajo del look salen como una lista elegante con su botón de comprar. También puedes pegar lo que copia el botón «Compartir» de la app de Amazon.</p>'+
+    '<textarea id="f-bulk" aria-label="Piezas para añadir" placeholder="Blusa satinada estampado floral https://amzn.to/3abc123&#10;Falda midi efecto cuero https://amzn.to/3def456&#10;Tacones fucsia puntiagudos B0CXYZ1234"></textarea>'+
+    '<button class="sbtn pri" data-act="cbulk">Añadir estas piezas</button></details>';
+  h += '<div class="tools" style="margin:10px 0 0"><button class="sbtn" data-act="cnew-p">Nuevo producto (con foto, talla, etc.)</button></div>';
   h += avail.length ? '<div class="tools" style="margin:10px 0 0"><select id="f-addp" style="flex:1 1 220px" aria-label="Producto para añadir">'+avail.map(function(p){return '<option value="'+p.id+'">'+esc(p.name)+'</option>';}).join("")+'</select><button class="sbtn" data-act="cadd">Añadir a la escena</button></div>' : '<p class="hint">Crea productos en la pestaña Productos para añadirlos aquí.</p>';
   h += '</div></div><div class="ed-foot">'+(A.edit.isNew?'<span></span>':delBtn("c:"+A.edit.id))+'<div><button class="sbtn" data-act="cancel">Cancelar</button><button class="sbtn pri" data-act="save-c"'+(A.uploading?' disabled':'')+'>Guardar colección</button></div></div></div>';
   return h;
@@ -1169,6 +1207,48 @@ function saveProduct(){
   } else A.edit = null;
   changed(); render(); window.scrollTo(0,0); toast("Producto guardado.");
 }
+var LINK_RE = /(https?:\/\/[^\s"'<>]+)|\b(B0[A-Z0-9]{8})\b/;
+function cleanName(t){
+  return String(t||"").replace(/^\s*(check out (this|the)[^:]*:|mira (este|esta)[^:]*:|amazon\.com\s*:|[-•*·\d.)\s]+(?=\D))/i, "")
+    .replace(/\s*(amazon\.com|on amazon|en amazon)\s*$/i, "").replace(/^["'“”\s]+|["'“”:|–—\-\s]+$/g, "").replace(/\s{2,}/g, " ").trim();
+}
+function storeFromLink(u){
+  if (/^B0/.test(u) || /amazon\.|amzn\.|\ba\.co\//i.test(u)) return { store:"Amazon" };
+  var known = [["ashley","Ashley"],["wayfair","Wayfair"],["target","Target"],["walmart","Walmart"]];
+  for (var i=0;i<known.length;i++) if (u.toLowerCase().indexOf(known[i][0]) >= 0) return { store:known[i][1] };
+  var host = ""; try { host = new URL(u).hostname.replace(/^www\./,"").split(".")[0]; } catch(e){}
+  return { store:"Otra", storeLabel: host ? host.charAt(0).toUpperCase() + host.slice(1) : "" };
+}
+function parseBulk(text){
+  var out = [], pending = "";
+  String(text||"").split(/\r?\n/).forEach(function(line){
+    line = line.trim(); if (!line) return;
+    var m = line.match(LINK_RE);
+    if (!m){ if (pending) out.push({ name:pending, url:"" }); pending = cleanName(line); return; }
+    var link = (m[1] || m[2]).replace(/[).,;]+$/, ""), name = cleanName(line.replace(m[0], " "));
+    if (!name && pending) name = pending;
+    else if (pending) out.push({ name:pending, url:"" });
+    pending = "";
+    if (name) out.push({ name:name, url:link });
+  });
+  if (pending) out.push({ name:pending, url:"" });
+  return out.filter(function(x){ return x.name; }).slice(0, 60);
+}
+function bulkAdd(){
+  syncForm(); var f = A.edit.f, items = parseBulk(val("f-bulk"));
+  if (!items.length){ toast("Pega al menos una línea con el nombre de la pieza y su link."); return; }
+  var stored = coll(A.edit.id), ids = [];
+  items.forEach(function(x){
+    var st = x.url ? storeFromLink(x.url) : { store:"Amazon" };
+    var p = { id:uid("p"), name:x.name, store:st.store, storeLabel:st.storeLabel||"", url:x.url, price:"", category:"", note:"", image:"", example:false };
+    p.category = guessCat(p) || f.category || "";
+    S.products.unshift(p); ids.push(p.id);
+  });
+  f.productIds = f.productIds.concat(ids);
+  if (stored){ stored.productIds = (stored.productIds||[]).concat(ids); }
+  changed(); render();
+  toast(ids.length === 1 ? "1 pieza añadida." + (stored ? "" : " Guarda la colección.") : ids.length + " piezas añadidas." + (stored ? "" : " Guarda la colección."));
+}
 function saveCollection(){
   syncForm(); var f = A.edit.f;
   if (!f.title){ toast("Escribe el título de la colección."); return; }
@@ -1213,6 +1293,7 @@ root.addEventListener("click", function(e){
     case "edit": startEdit(kind, id); break;
     case "cancel": if (A.back){ A.edit = A.back; A.back = null; A.fromColl = false; } else A.edit = null; render(); break;
     case "cedit-p": { var pid0 = A.edit.f.productIds[+b.getAttribute("data-i")]; A.back = A.edit; A.fromColl = false; startEdit("p", pid0); break; }
+    case "cbulk": bulkAdd(); break;
     case "cnew-p": A.back = A.edit; A.fromColl = true; startEdit("p"); break;
     case "save-p": saveProduct(); break;
     case "save-c": saveCollection(); break;
