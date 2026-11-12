@@ -8,6 +8,7 @@
 <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="Eyre Roses">
+<link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#F8F5F4">
 <meta name="description" content="Ambientes completos, moda y decoración elegidos por Eyre Roses, con cada pieza a un clic.">
 <link rel="canonical" href="/">
@@ -478,6 +479,15 @@ function guessCat(p){
   for (var i=0;i<GUESS.length;i++){ if (GUESS[i][1].test(t) && cat(GUESS[i][0])) return GUESS[i][0]; }
   return "";
 }
+function collGuess(c){
+  var tally = {}, n = 0;
+  (c.productIds||[]).map(prod).filter(Boolean).forEach(function(p){ var t = topOf(p.category); if (t){ tally[t] = (tally[t]||0) + 1; n++; } });
+  var best = Object.keys(tally).sort(function(a,b){ return tally[b]-tally[a]; })[0];
+  if (best) return best;
+  var t = plain([c.title, c.title_en, c.kicker, c.desc].join(" "));
+  if (cat("moda") && /\b(look|outfit|moda|fashion|estilo|style|chic|vestid|dress|ropa|closet)/.test(t)) return "moda";
+  var g = guessCat({ name:t }); return g ? topOf(g) : "";
+}
 /* Fills gaps in saved data without deleting anything: fashion subcategories and products left without a category. */
 function normalize(){
   if (!S || !S.categories) return;
@@ -509,7 +519,7 @@ function normalize(){
     c.productIds.map(prod).filter(Boolean).forEach(function(p){ var t = topOf(p.category); if (t){ tally[t] = (tally[t]||0) + 1; n++; } });
     var best = Object.keys(tally).sort(function(a,b){ return tally[b]-tally[a]; })[0];
     if (best && tally[best] * 2 > n && topOf(c.category) !== best && (best === "moda" || best === "belleza")) c.category = best;
-    if (!cat(c.category) && best) c.category = best;
+    if (!cat(c.category)){ var g = best || collGuess(c); if (g) c.category = g; }
   });
 }
 /* Guarda solo: cada cambio se envía al servidor medio segundo después. */
@@ -1182,7 +1192,7 @@ function startEdit(kind, id){
     A.edit = { kind:"p", id: p ? p.id : uid("p"), isNew: !p, f: f };
   } else {
     var c = id ? coll(id) : null;
-    A.edit = { kind:"c", id: c ? c.id : uid("c"), isNew: !c, f: c ? JSON.parse(JSON.stringify(c)) : { title:"", kicker:"", desc:"", category:"", featured:false, image:"", productIds:[] } };
+    A.edit = { kind:"c", id: c ? c.id : uid("c"), isNew: !c, f: c ? JSON.parse(JSON.stringify(c)) : { title:"", kicker:"", desc:"", category:(A.qcat && cat(A.qcat) ? topOf(A.qcat) : (cat("moda") ? "moda" : "")), featured:false, image:"", productIds:[] } };
   }
   render(); window.scrollTo(0,0);
 }
@@ -1252,6 +1262,7 @@ function bulkAdd(){
 function saveCollection(){
   syncForm(); var f = A.edit.f;
   if (!f.title){ toast("Escribe el título de la colección."); return; }
+  if (!cat(f.category)){ var gc = collGuess(f); if (gc){ f.category = gc; } else { toast("Elige la categoría de la colección (por ejemplo Moda) para que salga en esa sección."); return; } }
   var old = coll(A.edit.id);
   var c = { id:A.edit.id, title:f.title, kicker:f.kicker, desc:f.desc, title_en:f.title_en||"", kicker_en:f.kicker_en||"", desc_en:f.desc_en||"", category:f.category, featured:!!f.featured, image:f.image||"", productIds:f.productIds.slice(), example:false };
   if (old && old.tones) c.tones = old.tones;
