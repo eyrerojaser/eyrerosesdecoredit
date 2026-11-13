@@ -157,8 +157,8 @@ h1,h2,h3{font-family:var(--display);font-weight:500;text-wrap:balance;margin:0;l
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lrow{--tile:#2C2125}:root:not([data-theme="light"]) .lrow:nth-child(even){--tile:#2A2420}}
 :root[data-theme="dark"] .lrow{--tile:#2C2125}:root[data-theme="dark"] .lrow:nth-child(even){--tile:#2A2420}
 .bulk{margin-top:14px;border:1px dashed var(--line);border-radius:var(--radius);padding:12px 14px;background:var(--surface)}
-.bulk summary{cursor:pointer;font-weight:500;color:var(--rose)}
-.bulk textarea{width:100%;min-height:150px;margin:8px 0}
+.bulk-t{display:block;font-weight:500;color:var(--rose);font-size:16px}
+.bulk textarea#f-bulk{width:100%;height:min(60vh,460px);min-height:min(60vh,460px);margin:10px 0;font-size:16px;line-height:1.5;resize:vertical}
 .empty{padding:40px 20px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--radius)}
 
 /* Product cards */
@@ -1167,10 +1167,10 @@ function editCollection(){
     h += '<div class="inlist">'+f.productIds.map(function(id,i){ var p = prod(id); if(!p) return ""; return '<div class="arow"><span class="n">'+(i+1)+'</span>'+thumb(p.image,phProduct(p))+'<div class="ainfo"><b>'+esc(p.name)+'</b><small>'+esc(storeName(p))+'</small></div><div class="aact"><button class="sbtn icon" data-act="cmove" data-i="'+i+'" data-d="-1"'+(i===0?' disabled':'')+' aria-label="Subir">↑</button><button class="sbtn icon" data-act="cmove" data-i="'+i+'" data-d="1"'+(i===f.productIds.length-1?' disabled':'')+' aria-label="Bajar">↓</button><button class="sbtn pri" data-act="cedit-p" data-i="'+i+'">Editar</button><button class="sbtn" data-act="cremove" data-i="'+i+'">Quitar</button></div></div>'; }).join("")+'</div>';
   } else h += '<p class="hint">Aún no hay productos en esta colección.</p>';
   var avail = S.products.filter(function(p){ return f.productIds.indexOf(p.id)<0; });
-  h += '<details class="bulk"'+(f.productIds.length?'':' open')+'><summary>Pegar varias piezas de una vez (rápido)</summary>'+
-    '<p class="hint">Una pieza por línea: el nombre y el link de Amazon (o el número ASIN). No necesitas foto: debajo del look salen como una lista elegante con su botón de comprar. También puedes pegar lo que copia el botón «Compartir» de la app de Amazon.</p>'+
+  h += '<div class="bulk"><label for="f-bulk" class="bulk-t">Pegar links por pieza</label>'+
+    
     '<textarea id="f-bulk" aria-label="Piezas para añadir" placeholder="Blusa satinada estampado floral https://amzn.to/3abc123&#10;Falda midi efecto cuero https://amzn.to/3def456&#10;Tacones fucsia puntiagudos B0CXYZ1234"></textarea>'+
-    '<button class="sbtn pri" data-act="cbulk">Añadir estas piezas</button></details>';
+    '<button class="sbtn pri" data-act="cbulk">Añadir estas piezas</button></div>';
   h += '<div class="tools" style="margin:10px 0 0"><button class="sbtn" data-act="cnew-p">Nuevo producto (con foto, talla, etc.)</button></div>';
   h += avail.length ? '<div class="tools" style="margin:10px 0 0"><select id="f-addp" style="flex:1 1 220px" aria-label="Producto para añadir">'+avail.map(function(p){return '<option value="'+p.id+'">'+esc(p.name)+'</option>';}).join("")+'</select><button class="sbtn" data-act="cadd">Añadir a la escena</button></div>' : '<p class="hint">Crea productos en la pestaña Productos para añadirlos aquí.</p>';
   h += '</div></div><div class="ed-foot">'+(A.edit.isNew?'<span></span>':delBtn("c:"+A.edit.id))+'<div><button class="sbtn" data-act="cancel">Cancelar</button><button class="sbtn pri" data-act="save-c"'+(A.uploading?' disabled':'')+'>Guardar colección</button></div></div></div>';
