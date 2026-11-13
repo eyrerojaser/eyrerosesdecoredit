@@ -124,6 +124,17 @@ h1,h2,h3{font-family:var(--display);font-weight:500;text-wrap:balance;margin:0;l
 .sec-head h2{font-size:clamp(26px,3.4vw,38px);font-weight:400}
 .sec-head h2 em{color:var(--rose)}
 .sec-head .label{display:block;margin-bottom:6px}
+/* Outfit on the page with every piece and its buy button right beside/below it */
+.outfit{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(22px,4vw,52px);align-items:start;padding-block:clamp(26px,4.5vw,52px);border-top:1px solid var(--line)}
+.welcome + div + .outfit,.outfit.big{border-top:0}
+.o-media{position:sticky;top:130px}
+.o-side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.o-side h2{font-size:clamp(30px,4.2vw,50px);font-weight:400;line-height:1.08;margin:0}
+.outfit.big .o-side h2{font-size:clamp(34px,5vw,60px)}
+.o-side .desc{color:var(--muted);margin:0;max-width:46ch}
+.o-count{margin:4px 0 2px;color:var(--muted);font-size:14px}
+.look.in{grid-template-columns:1fr;gap:10px}
+@media(max-width:820px){.outfit{grid-template-columns:1fr}.o-media{position:relative;top:auto}}
 /* Shop-the-look list: pieces without their own photo, each on a soft colored tile */
 .look{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
 .look.after{margin-top:30px}
@@ -138,8 +149,10 @@ h1,h2,h3{font-family:var(--display);font-weight:500;text-wrap:balance;margin:0;l
 .lbuy{padding:9px 16px}
 @media(max-width:520px){
   .look{grid-template-columns:1fr}
-  .lrow{grid-template-columns:auto minmax(0,1fr);row-gap:10px}
-  .lbuy{grid-column:2;justify-self:start}
+  .lrow{gap:11px;padding:12px 12px 12px 11px}
+  .lnum{width:32px;height:32px;font-size:16px}
+  .ltext h3{font-size:14.5px}
+  .lbuy{padding:8px 13px;font-size:13px}
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lrow{--tile:#2C2125}:root:not([data-theme="light"]) .lrow:nth-child(even){--tile:#2A2420}}
 :root[data-theme="dark"] .lrow{--tile:#2C2125}:root[data-theme="dark"] .lrow:nth-child(even){--tile:#2A2420}
@@ -502,6 +515,12 @@ function normalize(){
     S.categories.forEach(function(k){ if (k.parent === c.id) k.parent = keep; });
     S.categories = S.categories.filter(function(k){ return k !== c; });
   });
+  S.categories.slice().forEach(function(c){
+    var par = c.parent && cat(c.parent); if (!par || plain(c.label).trim() !== plain(par.label).trim()) return;
+    S.products.forEach(function(p){ if (p.category === c.id) p.category = par.id; });
+    S.collections.forEach(function(x){ if (x.category === c.id) x.category = par.id; });
+    S.categories = S.categories.filter(function(k){ return k !== c; });
+  });
   if (cat("moda") && !kids("moda").length){
     [["vestidos","Vestidos"],["zapatos","Zapatos"],["bolsos","Bolsos"],["accesorios","Accesorios"]].forEach(function(x){
       var id = x[0]; while (cat(id)) id += "-moda";
@@ -642,13 +661,13 @@ function uploadImage(file, max){
 var LANG = (function(){ var v = lsGet("vc-lang"); if (v === "es" || v === "en") return v; var n = (navigator.language||"es").toLowerCase(); return n.indexOf("es")===0 ? "es" : "en"; })();
 var TX = {
   es: { all:"Todo", cats:"Categorías", admin:"Administrar", photoPending:"Foto pendiente",
-        example:"Ejemplo", exampleContent:"Contenido de ejemplo", shopOn:"Ver en ", shopShort:"Comprar", linkPending:"Enlace pendiente", buyOwn:"Comprar", addToBag:"Añadir al carrito", bag:"Carrito", bagEmpty:"Tu carrito está vacío.", subtotal:"Subtotal", shipping:"Envío", freeShipFrom:"Envío gratis desde ", shipFree:"Gratis", shipAtPay:"El envío se suma al pagar.", checkout:"Pagar", orderWa:"Hacer pedido por WhatsApp", keepShopping:"Seguir mirando", added:"Añadido al carrito", removeItem:"Quitar", thanks:"¡Gracias por tu compra! Te llegará la confirmación por correo.", payOff:"El pago en línea todavía no está activo.", paying:"Abriendo el pago…", sizeLabel:"Talla", pickSize:"Elige tu talla primero", soldOut:"Agotada", ownBadge:"Eyre Roses", ownPiece:"Exclusivo", ownTitle:"Colección <em>Eyre Roses</em>", ownLabel:"Ropa seleccionada por mí", noProducts:"Todavía no hay productos aquí.",
+        example:"Ejemplo", exampleContent:"Contenido de ejemplo", shopOn:"Ver en ", shopShort:"Comprar", pieceOne:"pieza", tapToShop:"toca para comprar", linkPending:"Enlace pendiente", buyOwn:"Comprar", addToBag:"Añadir al carrito", bag:"Carrito", bagEmpty:"Tu carrito está vacío.", subtotal:"Subtotal", shipping:"Envío", freeShipFrom:"Envío gratis desde ", shipFree:"Gratis", shipAtPay:"El envío se suma al pagar.", checkout:"Pagar", orderWa:"Hacer pedido por WhatsApp", keepShopping:"Seguir mirando", added:"Añadido al carrito", removeItem:"Quitar", thanks:"¡Gracias por tu compra! Te llegará la confirmación por correo.", payOff:"El pago en línea todavía no está activo.", paying:"Abriendo el pago…", sizeLabel:"Talla", pickSize:"Elige tu talla primero", soldOut:"Agotada", ownBadge:"Eyre Roses", ownPiece:"Exclusivo", ownTitle:"Colección <em>Eyre Roses</em>", ownLabel:"Ropa seleccionada por mí", noProducts:"Todavía no hay productos aquí.",
         piece:"pieza", pieces:"piezas", toBuy:" para comprar", welcome:"Bienvenida", founderPhoto:"Foto de la fundadora", seeRooms:"Ver los ambientes", meet:"Conóceme",
         featured:"Colección destacada", shopRoom:"Descubrir la colección", inScene:" piezas en esta escena", seenInScene:"Lo que ves en la escena", pieceBy:"Pieza por <em>pieza</em>",
         collections:"Colecciones", rooms:"Ambientes", moreColl:"Más <em>colecciones</em>", catalog:"Catálogo", allSel:"Toda la <em>selección</em>", moreFinds:"Más de la <em>selección</em>",
         category:"Categoría", products:" productos", roomsN:" ambientes", home:"Inicio", collection:"Colección", shopThis:"Compra este <em>ambiente</em>", noCat:"Sin categoría", allProducts:"Todos los productos", store:"la tienda" },
   en: { all:"All", cats:"Categories", admin:"Admin", photoPending:"Photo coming soon",
-        example:"Sample", exampleContent:"Sample content", shopOn:"Shop on ", shopShort:"Shop", linkPending:"Link coming soon", buyOwn:"Buy now", addToBag:"Add to bag", bag:"Bag", bagEmpty:"Your bag is empty.", subtotal:"Subtotal", shipping:"Shipping", freeShipFrom:"Free shipping from ", shipFree:"Free", shipAtPay:"Shipping is added at checkout.", checkout:"Checkout", orderWa:"Order via WhatsApp", keepShopping:"Keep browsing", added:"Added to your bag", removeItem:"Remove", thanks:"Thank you for your order! Your confirmation is on its way by email.", payOff:"Online payment isn't active yet.", paying:"Opening checkout…", sizeLabel:"Size", pickSize:"Choose your size first", soldOut:"Sold out", ownBadge:"Eyre Roses", ownPiece:"Exclusive", ownTitle:"The Eyre Roses <em>collection</em>", ownLabel:"Clothing I hand-picked", noProducts:"No products here yet.",
+        example:"Sample", exampleContent:"Sample content", shopOn:"Shop on ", shopShort:"Shop", pieceOne:"piece", tapToShop:"tap to shop", linkPending:"Link coming soon", buyOwn:"Buy now", addToBag:"Add to bag", bag:"Bag", bagEmpty:"Your bag is empty.", subtotal:"Subtotal", shipping:"Shipping", freeShipFrom:"Free shipping from ", shipFree:"Free", shipAtPay:"Shipping is added at checkout.", checkout:"Checkout", orderWa:"Order via WhatsApp", keepShopping:"Keep browsing", added:"Added to your bag", removeItem:"Remove", thanks:"Thank you for your order! Your confirmation is on its way by email.", payOff:"Online payment isn't active yet.", paying:"Opening checkout…", sizeLabel:"Size", pickSize:"Choose your size first", soldOut:"Sold out", ownBadge:"Eyre Roses", ownPiece:"Exclusive", ownTitle:"The Eyre Roses <em>collection</em>", ownLabel:"Clothing I hand-picked", noProducts:"No products here yet.",
         piece:"piece", pieces:"pieces", toBuy:" to shop", welcome:"Welcome", founderPhoto:"Photo of the founder", seeRooms:"Explore the rooms", meet:"Meet me",
         featured:"Featured collection", shopRoom:"Discover the collection", inScene:" pieces in this scene", seenInScene:"Everything in the scene", pieceBy:"Piece by <em>piece</em>",
         collections:"Collections", rooms:"Rooms", moreColl:"More <em>collections</em>", catalog:"Catalog", allSel:"The full <em>edit</em>", moreFinds:"More from the <em>edit</em>",
@@ -925,6 +944,13 @@ function welcome(){
     (sign?'<span class="sign">'+esc(sign)+'</span>':'')+
     '<div class="welcome-actions"><a class="btn" href="#colecciones">'+T("seeRooms")+' '+ARROW+'</a>'+(brand?'<a class="btn ghost" href="'+esc(brand)+'" target="_blank" rel="noopener">'+T("meet")+'</a>':'')+'</div></div></section>';
 }
+function outfitBlock(c, big){
+  var items = collProducts(c), kick = L(c,"kicker") || catName(c.category), desc = L(c,"desc");
+  var h = '<article class="outfit'+(big?' big':'')+'"><figure class="window o-media"><a class="scene" href="'+esc(urlColl(c))+'" aria-label="'+esc(L(c,"title"))+'">'+sceneImg(c)+'</a></figure>';
+  h += '<div class="o-side"><span class="label">'+esc(kick)+'</span><h2>'+esc(L(c,"title"))+'</h2>'+(desc?'<p class="desc">'+esc(desc)+'</p>':'');
+  if (items.length) h += '<p class="o-count">'+items.length+' '+T(items.length===1?"pieceOne":"pieces")+' · '+T("tapToShop")+'</p><ol class="look in">'+items.map(function(p,k){ return lookRow(p, k+1); }).join("")+'</ol>';
+  return h + '</div></article>';
+}
 function viewHome(){
   var feat = S.collections.filter(function(c){return c.featured;})[0] || S.collections[0];
   var h = header("all") + '<main class="wrap">' + welcome() + '<div id="colecciones"></div>';
@@ -932,13 +958,12 @@ function viewHome(){
   if (feat){
     var items = collProducts(feat);
     items.forEach(function(p){ shown[p.id] = true; });
-    h += '<section class="hero"><figure class="window"><a class="scene" href="'+esc(urlColl(feat))+'">'+sceneImg(feat)+'</a></figure><div class="hero-text"><span class="label">'+esc(L(feat,"kicker")||T("featured"))+'</span><h2>'+esc(L(feat,"title"))+'</h2><p class="desc">'+esc(L(feat,"desc"))+'</p><a class="btn" href="'+esc(urlColl(feat))+'">'+T("shopRoom")+' '+ARROW+'</a><p class="count">'+items.length+T("inScene")+'</p></div></section>';
-    if (items.length) h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("seenInScene")+'</span><h2>'+T("pieceBy")+'</h2></div></div>'+grid(items, true)+'</section>';
+    h += outfitBlock(feat, true);
   } else {
     h += '<section class="hero"><div class="hero-text"><span class="label">'+T("collections")+'</span><h2>'+esc(L(S.settings,"tagline"))+'</h2></div></section>';
   }
   var others = S.collections.filter(function(c){ return c !== feat; });
-  if (others.length) h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("rooms")+'</span><h2>'+T("moreColl")+'</h2></div></div><div class="cgrid">'+others.map(ccard).join("")+'</div></section>';
+  others.forEach(function(c){ h += outfitBlock(c); collProducts(c).forEach(function(p){ shown[p.id] = true; }); });
   var own = S.products.filter(function(p){ return isOwn(p) && !shown[p.id]; }).sort(function(a,b){ return (a.soldOut?1:0) - (b.soldOut?1:0); });
   if (own.length) h += '<section class="sec" id="eyre-roses"><div class="sec-head"><div><span class="label">'+T("ownLabel")+'</span><h2>'+esc(ownBrand()).replace(/\s(\S+)$/, " <em>$1</em>")+'</h2></div></div>'+grid(own)+'</section>';
   own.forEach(function(p){ shown[p.id] = true; });
@@ -957,8 +982,10 @@ function viewCat(id){
       subs.map(function(k){ return '<a class="chip'+(k.id===id?" on":"")+'" href="'+urlCat(k.id)+'">'+esc(catName(k.id))+'</a>'; }).join("")+'</div>';
   }
   var h = header(id) + '<main class="wrap"><div class="chead"><span class="label">'+(parent.id!==id?esc(catName(parent.id)):T("category"))+'</span><h1>'+esc(catName(id))+'</h1><p>'+ps.length+T("products")+(cs.length?' · '+cs.length+T("roomsN"):'')+'</p>'+sub+'</div>';
-  if (cs.length) h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("rooms")+'</span><h2>'+T("collections")+'</h2></div></div><div class="cgrid">'+cs.map(ccard).join("")+'</div></section>';
-  h += '<section class="sec">'+(cs.length?'<div class="sec-head"><div><span class="label">'+T("catalog")+'</span><h2>'+T("allProducts")+'</h2></div></div>':'')+grid(ps)+'</section>';
+  var inOutfit = {};
+  cs.forEach(function(x){ h += outfitBlock(x); collProducts(x).forEach(function(p){ inOutfit[p.id] = true; }); });
+  var restPs = ps.filter(function(p){ return !inOutfit[p.id]; });
+  if (restPs.length || !cs.length) h += '<section class="sec">'+(cs.length?'<div class="sec-head"><div><span class="label">'+T("catalog")+'</span><h2>'+T("moreFinds")+'</h2></div></div>':'')+grid(restPs)+'</section>';
   return h + '</main>' + footer();
 }
 function viewColl(id){
