@@ -31,6 +31,11 @@ export default async (req) => {
     const s = slug(c.title);
     pages.push({ loc: `/coleccion/${s ? s + "-" : ""}${c.id}`, priority: "0.8" });
   }
+  for (const p of products) {
+    if (!p || !p.id) continue;
+    const s = slug(p.name);
+    pages.push({ loc: `/producto/${s ? s + "-" : ""}${p.id}`, priority: "0.6" });
+  }
   for (const sl of ["envios", "devoluciones", "privacidad", "contacto"]) pages.push({ loc: `/politicas/${sl}`, priority: "0.3" });
   const body =
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +

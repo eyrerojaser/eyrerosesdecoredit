@@ -135,6 +135,52 @@ h1,h2,h3{font-family:var(--display);font-weight:500;text-wrap:balance;margin:0;l
 .o-count{margin:4px 0 2px;color:var(--muted);font-size:14px}
 .look.in{grid-template-columns:1fr;gap:10px}
 @media(max-width:820px){.outfit{grid-template-columns:1fr}.o-media{position:relative;top:auto}}
+.cat-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.cat-tile{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 10px;padding:18px 20px;border-radius:14px;background:#F6E8EA;border:1px solid color-mix(in srgb,var(--gold) 28%,transparent);color:var(--ink);text-decoration:none}
+.cat-tile:nth-child(even){background:#F5EDE1}
+.cat-tile span{font-family:var(--display);font-size:22px}
+.cat-tile small{grid-column:1;color:var(--muted);font-size:13px}
+.cat-tile svg{grid-row:1/3;grid-column:2;width:16px;height:16px;color:var(--rose)}
+.cat-tile:hover{border-color:var(--rose)}
+:root[data-theme="dark"] .cat-tile{background:#2C2125}:root[data-theme="dark"] .cat-tile:nth-child(even){background:#2A2420}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .cat-tile{background:#2C2125}:root:not([data-theme="light"]) .cat-tile:nth-child(even){background:#2A2420}}
+.acat{max-width:150px;padding:7px 8px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);font-size:13px}
+/* Collections in a tidy grid: same frame size, photo never cropped; two per row on phones */
+.ccard .scene,.ccard .scene:has(img){aspect-ratio:2/3;background:var(--tint);border:1px solid var(--line)}
+.ccard .scene img,.ccard .scene:has(img) img{width:100%;height:100%;object-fit:contain}
+.cgrid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+@media(max-width:560px){main .cgrid{grid-template-columns:1fr 1fr;gap:22px 12px}main .ccard{gap:8px}main .ccard h3{font-size:18px;line-height:1.2}main .ccard p{font-size:12.5px}main .ccard .label{font-size:10px}}
+.see-all{text-align:center;margin:26px 0 0}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+/* share */
+.share-row{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 2px}
+.share-btn{display:inline-flex;align-items:center;gap:6px}
+.share-btn svg,.pcopy svg{width:15px;height:15px}
+.pimg{position:relative}
+.plink{display:block;width:100%;height:100%}
+.pcopy{position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 88%,transparent);color:var(--rose);display:grid;place-items:center;cursor:pointer;z-index:2}
+.pcopy:hover{border-color:var(--rose)}
+.pbody h3 a,.ltext h3 a{color:inherit;text-decoration:none}
+.pbody h3 a:hover,.ltext h3 a:hover{color:var(--rose)}
+.lrow.has-img{grid-template-columns:auto auto minmax(0,1fr) auto}
+.lthumb{width:46px;height:46px;border-radius:10px;overflow:hidden;background:var(--surface);border:1px solid var(--line);display:block}
+.lthumb img{width:100%;height:100%;object-fit:contain}
+@media(max-width:520px){.lrow.has-img{grid-template-columns:auto auto minmax(0,1fr) auto}.lthumb{width:40px;height:40px}}
+.outfit.solo{border-top:0;padding-top:8px}
+.outfit.solo h1{font-size:clamp(32px,5vw,58px);font-weight:400;line-height:1.06;margin:0}
+/* product page */
+.ppage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(22px,4vw,52px);align-items:start;padding-block:8px 20px}
+.ppage-media{position:relative;margin:0}
+.ppage-media img{display:block;width:100%;height:auto;max-height:78vh;object-fit:contain;background:var(--surface)}
+.ppage-side{display:flex;flex-direction:column;gap:16px;min-width:0}
+.ppage-side .pbody{display:flex;flex-direction:column;gap:12px;padding:0}
+.ppage-side h1{font-size:clamp(28px,4vw,44px);font-weight:400;line-height:1.1;margin:0}
+.ppage-side .price{font-size:20px;margin:0}
+.btn.pbig{align-self:flex-start;padding:15px 26px;font-size:16px;background:var(--rose);color:var(--rose-ink);border-color:var(--rose)}
+.in-looks{display:flex;flex-direction:column;gap:8px;padding-top:14px;border-top:1px solid var(--line)}
+.in-looks a{color:var(--rose);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.in-looks a svg{width:12px;height:12px}
+@media(max-width:820px){.ppage{grid-template-columns:1fr}}
 /* Shop-the-look list: pieces without their own photo, each on a soft colored tile */
 .look{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
 .look.after{margin-top:30px}
@@ -429,11 +475,14 @@ function storeName(p){ return p.store === "propia" ? ownBrand() + " (pieza propi
 function slugU(t){ return String(t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,60); }
 function urlColl(c){ var sl = slugU(c.title); return "/coleccion/" + (sl ? sl + "-" : "") + c.id; }
 function urlCat(id){ return "/categoria/" + id; }
+function urlProd(p){ var sl = slugU(p.name); return "/producto/" + (sl ? sl + "-" : "") + p.id; }
+function fullUrl(path){ return location.origin + path; }
 function route(){
   var p = decodeURIComponent(location.pathname).replace(/\/+$/,"");
   var m;
   if (/^\/admin$/i.test(p)) return { view:"admin" };
   if ((m = p.match(/^\/(?:coleccion|collection)\/(.+)$/i))){ var seg = m[1], id = seg.slice(seg.lastIndexOf("-")+1); return { view:"coll", id: coll(id) ? id : seg }; }
+  if ((m = p.match(/^\/(?:producto|product)\/(.+)$/i))){ var sg = m[1], pid = sg.slice(sg.lastIndexOf("-")+1); return { view:"prod", id: prod(pid) ? pid : sg }; }
   if ((m = p.match(/^\/(?:categoria|category)\/(.+)$/i))) return { view:"cat", id:m[1] };
   if ((m = p.match(/^\/(?:politicas|policies)\/(.+)$/i))) return { view:"policy", id:m[1].toLowerCase() };
   return { view:"home" };
@@ -455,6 +504,16 @@ function toast(msg){
   var t = document.querySelector(".toast"); if (!t){ t = document.createElement("div"); t.className="toast"; t.setAttribute("role","status"); document.body.appendChild(t); }
   t.textContent = msg; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(function(){ t.hidden = true; }, 3200);
 }
+var LINK_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 9.5 9.5 6.5M7 4.5l1.3-1.3a2.5 2.5 0 0 1 3.5 3.5L10.5 8M9 11.5l-1.3 1.3a2.5 2.5 0 0 1-3.5-3.5L5.5 8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
+function shareRow(path, title){
+  return '<div class="share-row">'+(typeof navigator.share === "function" ? '<button type="button" class="sbtn share-btn" data-share="'+esc(path)+'" data-title="'+esc(title)+'">'+T("share")+'</button>' : '')+
+    '<button type="button" class="sbtn share-btn" data-copy="'+esc(path)+'">'+LINK_ICON+' '+T("copyLink")+'</button></div>';
+}
+function copyText(t){
+  if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(t).catch(function(){ return legacyCopy(t); });
+  return Promise.resolve(legacyCopy(t));
+}
+function legacyCopy(t){ var a = document.createElement("textarea"); a.value = t; a.setAttribute("readonly",""); a.style.position = "fixed"; a.style.opacity = "0"; document.body.appendChild(a); a.select(); try { document.execCommand("copy"); } catch(e){} a.remove(); }
 var ARROW = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>';
 
 /* ---------- server ---------- */
@@ -484,7 +543,7 @@ var GUESS = [
   ["moda", /\b(pantalon|blusa|falda|camisa|chaqueta|abrigo|sueter|ropa|pijama|jeans|pants|blouse|skirt|shirt|jacket|coat|sweater|cardigan|clothing|outfit)/],
   ["belleza", /\b(maquillaje|brocha|labial|crema|serum|perfume|skincare|makeup|brush|lipstick|lotion|unas|nail|cabello|secador|rizador|beauty|cosmetic|mascara|rubor|blush)/],
   ["cocina", /\b(plato|copa|vaso|taza|cubierto|tenedor|cuchar|cuchillo|olla|sarten|bandeja|calentador|charola|fuente|ensaladera|jarra|tazon|plate|glass|cup|mug|cutlery|flatware|fork|spoon|knife|pot|pan|tray|warmer|warming|serving|dish|kitchen|bowl|pitcher|dinnerware|chafing)/],
-  ["decoracion", /\b(vela|candel|camino de mesa|mantel|servillet|guirnalda|calabaza|flor|florero|jarron|adorno|corona|arbol|navidad|esfera|lazo|centro de mesa|candle|runner|tablecloth|napkin|garland|pumpkin|flower|floral|vase|wreath|ornament|decor|centerpiece|christmas|halloween)/],
+  ["hogar", /\b(vela|candel|camino de mesa|mantel|servillet|guirnalda|calabaza|flor|florero|jarron|adorno|corona|arbol|navidad|esfera|lazo|centro de mesa|candle|runner|tablecloth|napkin|garland|pumpkin|flower|floral|vase|wreath|ornament|decor|centerpiece|christmas|halloween)/],
   ["hogar", /\b(mesa|silla|sofa|manta|cojin|almohada|lampara|alfombra|cortina|espejo|estante|cama|sabana|table|chair|couch|blanket|throw|pillow|lamp|rug|curtain|mirror|shelf|bed|sheet|furniture|mueble)/]
 ];
 function guessCat(p){
@@ -521,8 +580,24 @@ function normalize(){
     S.collections.forEach(function(x){ if (x.category === c.id) x.category = par.id; });
     S.categories = S.categories.filter(function(k){ return k !== c; });
   });
+  if (!S.settings.catV2){
+    var ensure = function(id, es, en){ var c = cat(id); if (!c){ c = { id:id, label:es }; S.categories.push(c); } c.label = es; c.label_en = en; delete c.label_en_src; return c; };
+    var hogar = cat("hogar"), deco = cat("decoracion");
+    if (deco && !hogar){ deco.id = "hogar"; hogar = deco; deco = null; S.products.forEach(function(p){ if (p.category === "decoracion") p.category = "hogar"; }); S.collections.forEach(function(x){ if (x.category === "decoracion") x.category = "hogar"; }); }
+    if (deco && hogar){
+      S.products.forEach(function(p){ if (p.category === "decoracion") p.category = "hogar"; });
+      S.collections.forEach(function(x){ if (x.category === "decoracion") x.category = "hogar"; });
+      S.categories.forEach(function(k){ if (k.parent === "decoracion") k.parent = "hogar"; });
+      S.categories = S.categories.filter(function(k){ return k.id !== "decoracion"; });
+    }
+    ensure("moda", "Moda", "Fashion"); ensure("cocina", "Cocina", "Kitchen"); ensure("hogar", "Hogar y decoración", "Home & Decor"); ensure("belleza", "Belleza", "Beauty");
+    var acc = ensure("accesorios", "Accesorios", "Accessories"); delete acc.parent;
+    var order = ["moda","cocina","hogar","belleza","accesorios"];
+    S.categories.sort(function(a,b){ var ia = order.indexOf(a.id), ib = order.indexOf(b.id); return (ia<0?99:ia) - (ib<0?99:ib); });
+    S.settings.catV2 = 1;
+  }
   if (cat("moda") && !kids("moda").length){
-    [["vestidos","Vestidos"],["zapatos","Zapatos"],["bolsos","Bolsos"],["accesorios","Accesorios"]].forEach(function(x){
+    [["vestidos","Vestidos"],["zapatos","Zapatos"],["bolsos","Bolsos"]].forEach(function(x){
       var id = x[0]; while (cat(id)) id += "-moda";
       S.categories.push({ id:id, label:x[1], label_en:CAT_EN[x[0]], parent:"moda" });
     });
@@ -658,16 +733,16 @@ function uploadImage(file, max){
 }
 
 /* ---------- language ---------- */
-var LANG = (function(){ var v = lsGet("vc-lang"); if (v === "es" || v === "en") return v; var n = (navigator.language||"es").toLowerCase(); return n.indexOf("es")===0 ? "es" : "en"; })();
+var LANG = (function(){ var q = (location.search.match(/[?&]lang=(es|en)\b/) || [])[1]; if (q){ lsSet("vc-lang", q); return q; } var v = lsGet("vc-lang"); if (v === "es" || v === "en") return v; var n = (navigator.language||"es").toLowerCase(); return n.indexOf("es")===0 ? "es" : "en"; })();
 var TX = {
   es: { all:"Todo", cats:"Categorías", admin:"Administrar", photoPending:"Foto pendiente",
-        example:"Ejemplo", exampleContent:"Contenido de ejemplo", shopOn:"Ver en ", shopShort:"Comprar", pieceOne:"pieza", tapToShop:"toca para comprar", linkPending:"Enlace pendiente", buyOwn:"Comprar", addToBag:"Añadir al carrito", bag:"Carrito", bagEmpty:"Tu carrito está vacío.", subtotal:"Subtotal", shipping:"Envío", freeShipFrom:"Envío gratis desde ", shipFree:"Gratis", shipAtPay:"El envío se suma al pagar.", checkout:"Pagar", orderWa:"Hacer pedido por WhatsApp", keepShopping:"Seguir mirando", added:"Añadido al carrito", removeItem:"Quitar", thanks:"¡Gracias por tu compra! Te llegará la confirmación por correo.", payOff:"El pago en línea todavía no está activo.", paying:"Abriendo el pago…", sizeLabel:"Talla", pickSize:"Elige tu talla primero", soldOut:"Agotada", ownBadge:"Eyre Roses", ownPiece:"Exclusivo", ownTitle:"Colección <em>Eyre Roses</em>", ownLabel:"Ropa seleccionada por mí", noProducts:"Todavía no hay productos aquí.",
+        example:"Ejemplo", exampleContent:"Contenido de ejemplo", shopOn:"Ver en ", shopShort:"Comprar", share:"Compartir", copyLink:"Copiar enlace", linkCopied:"Enlace copiado. Ya puedes pegarlo en Instagram, Pinterest o Facebook.", homeTitle:"Moda y <em>estilo</em>", seeAll:"Ver todo en", moreLooks:"Más looks", inLooks:"Aparece en", moreOf:"Más de", productOne:" producto", exploreMore:"Explora otras categorías", pieceOne:"pieza", tapToShop:"toca para comprar", linkPending:"Enlace pendiente", buyOwn:"Comprar", addToBag:"Añadir al carrito", bag:"Carrito", bagEmpty:"Tu carrito está vacío.", subtotal:"Subtotal", shipping:"Envío", freeShipFrom:"Envío gratis desde ", shipFree:"Gratis", shipAtPay:"El envío se suma al pagar.", checkout:"Pagar", orderWa:"Hacer pedido por WhatsApp", keepShopping:"Seguir mirando", added:"Añadido al carrito", removeItem:"Quitar", thanks:"¡Gracias por tu compra! Te llegará la confirmación por correo.", payOff:"El pago en línea todavía no está activo.", paying:"Abriendo el pago…", sizeLabel:"Talla", pickSize:"Elige tu talla primero", soldOut:"Agotada", ownBadge:"Eyre Roses", ownPiece:"Exclusivo", ownTitle:"Colección <em>Eyre Roses</em>", ownLabel:"Ropa seleccionada por mí", noProducts:"Todavía no hay productos aquí.",
         piece:"pieza", pieces:"piezas", toBuy:" para comprar", welcome:"Bienvenida", founderPhoto:"Foto de la fundadora", seeRooms:"Ver los ambientes", meet:"Conóceme",
         featured:"Colección destacada", shopRoom:"Descubrir la colección", inScene:" piezas en esta escena", seenInScene:"Lo que ves en la escena", pieceBy:"Pieza por <em>pieza</em>",
         collections:"Colecciones", rooms:"Ambientes", moreColl:"Más <em>colecciones</em>", catalog:"Catálogo", allSel:"Toda la <em>selección</em>", moreFinds:"Más de la <em>selección</em>",
         category:"Categoría", products:" productos", roomsN:" ambientes", home:"Inicio", collection:"Colección", shopThis:"Compra este <em>ambiente</em>", noCat:"Sin categoría", allProducts:"Todos los productos", store:"la tienda" },
   en: { all:"All", cats:"Categories", admin:"Admin", photoPending:"Photo coming soon",
-        example:"Sample", exampleContent:"Sample content", shopOn:"Shop on ", shopShort:"Shop", pieceOne:"piece", tapToShop:"tap to shop", linkPending:"Link coming soon", buyOwn:"Buy now", addToBag:"Add to bag", bag:"Bag", bagEmpty:"Your bag is empty.", subtotal:"Subtotal", shipping:"Shipping", freeShipFrom:"Free shipping from ", shipFree:"Free", shipAtPay:"Shipping is added at checkout.", checkout:"Checkout", orderWa:"Order via WhatsApp", keepShopping:"Keep browsing", added:"Added to your bag", removeItem:"Remove", thanks:"Thank you for your order! Your confirmation is on its way by email.", payOff:"Online payment isn't active yet.", paying:"Opening checkout…", sizeLabel:"Size", pickSize:"Choose your size first", soldOut:"Sold out", ownBadge:"Eyre Roses", ownPiece:"Exclusive", ownTitle:"The Eyre Roses <em>collection</em>", ownLabel:"Clothing I hand-picked", noProducts:"No products here yet.",
+        example:"Sample", exampleContent:"Sample content", shopOn:"Shop on ", shopShort:"Shop", share:"Share", copyLink:"Copy link", linkCopied:"Link copied. Paste it on Instagram, Pinterest or Facebook.", homeTitle:"Fashion &amp; <em>Style</em>", seeAll:"See all in", moreLooks:"More looks", inLooks:"Featured in", moreOf:"More", productOne:" product", exploreMore:"Explore other categories", pieceOne:"piece", tapToShop:"tap to shop", linkPending:"Link coming soon", buyOwn:"Buy now", addToBag:"Add to bag", bag:"Bag", bagEmpty:"Your bag is empty.", subtotal:"Subtotal", shipping:"Shipping", freeShipFrom:"Free shipping from ", shipFree:"Free", shipAtPay:"Shipping is added at checkout.", checkout:"Checkout", orderWa:"Order via WhatsApp", keepShopping:"Keep browsing", added:"Added to your bag", removeItem:"Remove", thanks:"Thank you for your order! Your confirmation is on its way by email.", payOff:"Online payment isn't active yet.", paying:"Opening checkout…", sizeLabel:"Size", pickSize:"Choose your size first", soldOut:"Sold out", ownBadge:"Eyre Roses", ownPiece:"Exclusive", ownTitle:"The Eyre Roses <em>collection</em>", ownLabel:"Clothing I hand-picked", noProducts:"No products here yet.",
         piece:"piece", pieces:"pieces", toBuy:" to shop", welcome:"Welcome", founderPhoto:"Photo of the founder", seeRooms:"Explore the rooms", meet:"Meet me",
         featured:"Featured collection", shopRoom:"Discover the collection", inScene:" pieces in this scene", seenInScene:"Everything in the scene", pieceBy:"Piece by <em>piece</em>",
         collections:"Collections", rooms:"Rooms", moreColl:"More <em>collections</em>", catalog:"Catalog", allSel:"The full <em>edit</em>", moreFinds:"More from the <em>edit</em>",
@@ -678,6 +753,9 @@ function T(k){ return TX[LANG][k]; }
 function L(o, k){ if (!o) return ""; if (LANG === "en"){ var e = o[k+"_en"]; if (e != null && String(e).trim()) return e; } return o[k]; }
 var CAT_EN = { hogar:"Home", decoracion:"Decor", cocina:"Kitchen", moda:"Fashion", belleza:"Beauty", individuales:"Single finds", vestidos:"Dresses", zapatos:"Shoes", bolsos:"Bags", accesorios:"Accessories" };
 function kids(id){ return S.categories.filter(function(c){ return c.parent === id; }); }
+function homeCat(){ var h = S.settings && S.settings.homeCat; if (h === "all") return ""; if (h && cat(h)) return topOf(h); return cat("moda") ? "moda" : ""; }
+function catOptions(sel){ return topCats().map(function(c){ return '<option value="'+esc(c.id)+'"'+(sel===c.id?' selected':'')+'>'+esc(c.label)+'</option>'+kids(c.id).map(function(k){ return '<option value="'+esc(k.id)+'"'+(sel===k.id?' selected':'')+'>&nbsp;&nbsp;— '+esc(k.label)+'</option>'; }).join(""); }).join(""); }
+function catHasItems(id){ var f = familyIds(id); return S.products.some(function(p){ return f.indexOf(p.category)>=0; }) || S.collections.some(function(x){ return f.indexOf(x.category)>=0; }); }
 function topCats(){ return S.categories.filter(function(c){ return !c.parent || !cat(c.parent); }); }
 function topOf(id){ var c = cat(id); if (!c) return ""; return (c.parent && cat(c.parent)) ? c.parent : c.id; }
 function familyIds(id){ return [id].concat(kids(id).map(function(c){ return c.id; })); }
@@ -725,9 +803,11 @@ function header(active){
   var by = by_ ? (brand ? '<a class="byline" href="'+esc(brand)+'" target="_blank" rel="noopener"><b>'+esc(by_)+'</b></a>' : '<span class="byline"><b>'+esc(by_)+'</b></span>') : "";
   var name = esc(siteName());
   name = name.indexOf("&amp;")>=0 ? name.replace("&amp;", "<i>&amp;</i>") : name.replace(/\s(Edit)$/i, " <i>$1</i>");
-  var chips = '<a class="chip'+(active==="all"?" on":"")+'" href="/">'+T("all")+'</a>';
+  var hc = homeCat();
   var act = cat(active); if (act && act.parent && cat(act.parent)) active = act.parent;
-  topCats().forEach(function(c){ chips += '<a class="chip'+(active===c.id?" on":"")+'" href="'+urlCat(c.id)+'">'+esc(catName(c.id))+'</a>'; });
+  if (hc && active === hc) active = "all";
+  var chips = '<a class="chip'+(active==="all"?" on":"")+'" href="/">'+(hc ? esc(catName(hc)) : T("all"))+'</a>';
+  topCats().forEach(function(c){ if (c.id === hc || !catHasItems(c.id)) return; chips += '<a class="chip'+(active===c.id?" on":"")+'" href="'+urlCat(c.id)+'">'+esc(catName(c.id))+'</a>'; });
   return '<header class="top"><div class="wrap"><div class="top-in"><a class="mark" href="/"><span>'+name+'</span></a><div class="top-side">'+by+langSwitch()+bagButton()+'</div></div><nav class="cats" aria-label="'+T("cats")+'">'+chips+'</nav></div></header>';
 }
 function card(p, n){
@@ -739,9 +819,10 @@ function card(p, n){
   else if (own) btn = priceNum(p.price) ? '<button type="button" class="buy" data-cart="add" data-pid="'+esc(p.id)+'"'+(sizes.length?' data-needsize="1"':'')+'>'+T("addToBag")+'</button>' : '<span class="pnote">'+T("linkPending")+'</span>';
   else if (url) btn = '<a class="buy" data-track="'+esc(p.id)+'" href="'+esc(url)+'" target="_blank" rel="sponsored noopener noreferrer">'+T("shopOn")+esc(storeShown(p))+' '+ARROW+'</a>';
   else btn = '<span class="pnote">'+T("linkPending")+'</span>';
-  return '<article class="pcard'+(own?' own':'')+'"><div class="pimg">'+(img?'<img src="'+esc(img)+'" alt="'+esc(name)+'" loading="lazy">':phProduct(p))+
+  return '<article class="pcard'+(own?' own':'')+'"><div class="pimg"><a class="plink" href="'+esc(urlProd(p))+'" aria-label="'+esc(name)+'">'+(img?'<img src="'+esc(img)+'" alt="'+esc(name)+'" loading="lazy">':phProduct(p))+'</a>'+
+    '<button type="button" class="pcopy" data-copy="'+esc(urlProd(p))+'" aria-label="'+esc(T("copyLink"))+'" title="'+esc(T("copyLink"))+'">'+LINK_ICON+'</button>'+
     (n?'<span class="pnum">'+n+'</span>':'')+(own?'<span class="badge own-badge">'+esc(ownBrand())+'</span>':(p.example?'<span class="badge">'+T("example")+'</span>':''))+
-    '</div><div class="pbody"><span class="label">'+(own?T("ownPiece"):esc(storeShown(p)))+' · '+esc(catName(p.category))+'</span><h3>'+esc(name)+'</h3>'+
+    '</div><div class="pbody"><span class="label">'+(own?T("ownPiece"):esc(storeShown(p)))+' · '+esc(catName(p.category))+'</span><h3><a href="'+esc(urlProd(p))+'">'+esc(name)+'</a></h3>'+
     (note?'<p class="pnote">'+esc(note)+'</p>':'')+
     (sizes.length && !p.soldOut && !allSold ? '<div class="sizes" role="group" aria-label="'+T("sizeLabel")+'">'+sizes.map(function(z){ var gone = soldS.indexOf(z.toLowerCase())>=0; return '<button type="button" class="size" data-size="'+esc(z)+'" data-pid="'+esc(p.id)+'"'+(gone?' disabled title="'+T("soldOut")+'"':'')+'>'+esc(z)+'</button>'; }).join("")+'</div>' : '')+
     '<div class="prow"><span class="price">'+esc(p.price||"")+'</span>'+btn+'</div></div></article>';
@@ -750,7 +831,8 @@ function hasPhoto(p){ return !!safeImg(p.image) || isOwn(p); }
 function lookRow(p, n){
   var url = linkFor(p), name = L(p,"name"), note = L(p,"note");
   var btn = url ? '<a class="buy lbuy" data-track="'+esc(p.id)+'" href="'+esc(url)+'" target="_blank" rel="sponsored noopener noreferrer" aria-label="'+esc(T("shopOn")+storeShown(p)+": "+name)+'">'+T("shopShort")+' '+ARROW+'</a>' : '<span class="pnote">'+T("linkPending")+'</span>';
-  return '<li class="lrow">'+(n?'<span class="lnum">'+n+'</span>':'<span class="lnum dot" aria-hidden="true"></span>')+'<div class="ltext"><span class="label">'+esc(storeShown(p))+' · '+esc(catName(p.category))+'</span><h3>'+esc(name)+'</h3>'+(note?'<p>'+esc(note)+'</p>':'')+'</div>'+btn+'</li>';
+  var im = safeImg(p.image);
+  return '<li class="lrow'+(im?' has-img':'')+'">'+(n?'<span class="lnum">'+n+'</span>':'<span class="lnum dot" aria-hidden="true"></span>')+(im?'<a class="lthumb" href="'+esc(urlProd(p))+'" tabindex="-1" aria-hidden="true"><img src="'+esc(im)+'" alt="" loading="lazy"></a>':'')+'<div class="ltext"><span class="label">'+esc(storeShown(p))+' · '+esc(catName(p.category))+'</span><h3><a href="'+esc(urlProd(p))+'">'+esc(name)+'</a></h3>'+(note?'<p>'+esc(note)+'</p>':'')+'</div>'+btn+'</li>';
 }
 function grid(list, numbered){
   if (!list.length) return '<p class="empty">'+T("noProducts")+'</p>';
@@ -952,23 +1034,26 @@ function outfitBlock(c, big){
   return h + '</div></article>';
 }
 function viewHome(){
-  var feat = S.collections.filter(function(c){return c.featured;})[0] || S.collections[0];
+  var hc = homeCat(), fam = hc ? familyIds(hc) : null;
+  var inHome = function(c_){ return !fam || fam.indexOf(c_) >= 0; };
+  var colls = S.collections.filter(function(c){ return inHome(c.category); });
+  colls = colls.filter(function(c){ return c.featured; }).concat(colls.filter(function(c){ return !c.featured; }));
   var h = header("all") + '<main class="wrap">' + welcome() + '<div id="colecciones"></div>';
-  var shown = {}; /* each product appears only once on the home page */
-  if (feat){
-    var items = collProducts(feat);
-    items.forEach(function(p){ shown[p.id] = true; });
-    h += outfitBlock(feat, true);
-  } else {
-    h += '<section class="hero"><div class="hero-text"><span class="label">'+T("collections")+'</span><h2>'+esc(L(S.settings,"tagline"))+'</h2></div></section>';
-  }
-  var others = S.collections.filter(function(c){ return c !== feat; });
-  others.forEach(function(c){ h += outfitBlock(c); collProducts(c).forEach(function(p){ shown[p.id] = true; }); });
-  var own = S.products.filter(function(p){ return isOwn(p) && !shown[p.id]; }).sort(function(a,b){ return (a.soldOut?1:0) - (b.soldOut?1:0); });
+  var inColl = {}; S.collections.forEach(function(c){ (c.productIds||[]).forEach(function(id){ inColl[id] = true; }); });
+  if (colls.length) h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("rooms")+'</span><h2>'+(hc ? T("homeTitle") : T("collections"))+'</h2></div></div><div class="cgrid">'+colls.map(ccard).join("")+'</div></section>';
+  var own = S.products.filter(function(p){ return isOwn(p); }).sort(function(a,b){ return (a.soldOut?1:0) - (b.soldOut?1:0); });
   if (own.length) h += '<section class="sec" id="eyre-roses"><div class="sec-head"><div><span class="label">'+T("ownLabel")+'</span><h2>'+esc(ownBrand()).replace(/\s(\S+)$/, " <em>$1</em>")+'</h2></div></div>'+grid(own)+'</section>';
-  own.forEach(function(p){ shown[p.id] = true; });
-  var rest = S.products.filter(function(p){ return !shown[p.id]; });
-  if (rest.length) h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("catalog")+'</span><h2>'+(Object.keys(shown).length ? T("moreFinds") : T("allSel"))+'</h2></div><p class="count">'+esc(L(S.settings,"tagline"))+'</p></div>'+grid(rest)+'</section>';
+  var rest = S.products.filter(function(p){ return !isOwn(p) && inHome(p.category) && !inColl[p.id]; });
+  if (rest.length){
+    var more = rest.length > 8;
+    h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("catalog")+'</span><h2>'+(hc ? T("moreOf")+' <em>'+esc(catName(hc).toLowerCase())+'</em>' : T("moreFinds"))+'</h2></div></div>'+grid(rest.slice(0,8))+
+      (more && hc ? '<p class="see-all"><a class="btn ghost" href="'+urlCat(hc)+'">'+T("seeAll")+' '+esc(catName(hc))+' '+ARROW+'</a></p>' : '')+'</section>';
+  }
+  var tiles = topCats().filter(function(c){ return c.id !== hc && catHasItems(c.id); }).map(function(c){
+    var f = familyIds(c.id), n = S.products.filter(function(p){ return f.indexOf(p.category) >= 0; }).length;
+    return '<a class="cat-tile" href="'+urlCat(c.id)+'"><span>'+esc(catName(c.id))+'</span><small>'+n+(n===1?T("productOne"):T("products"))+'</small>'+ARROW+'</a>';
+  }).join("");
+  if (tiles) h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("cats")+'</span><h2>'+T("exploreMore")+'</h2></div></div><div class="cat-tiles">'+tiles+'</div></section>';
   return h + '</main>' + footer();
 }
 function viewCat(id){
@@ -982,19 +1067,40 @@ function viewCat(id){
       subs.map(function(k){ return '<a class="chip'+(k.id===id?" on":"")+'" href="'+urlCat(k.id)+'">'+esc(catName(k.id))+'</a>'; }).join("")+'</div>';
   }
   var h = header(id) + '<main class="wrap"><div class="chead"><span class="label">'+(parent.id!==id?esc(catName(parent.id)):T("category"))+'</span><h1>'+esc(catName(id))+'</h1><p>'+ps.length+T("products")+(cs.length?' · '+cs.length+T("roomsN"):'')+'</p>'+sub+'</div>';
-  var inOutfit = {};
-  cs.forEach(function(x){ h += outfitBlock(x); collProducts(x).forEach(function(p){ inOutfit[p.id] = true; }); });
-  var restPs = ps.filter(function(p){ return !inOutfit[p.id]; });
-  if (restPs.length || !cs.length) h += '<section class="sec">'+(cs.length?'<div class="sec-head"><div><span class="label">'+T("catalog")+'</span><h2>'+T("moreFinds")+'</h2></div></div>':'')+grid(restPs)+'</section>';
+  if (cs.length) h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("rooms")+'</span><h2>'+T("collections")+'</h2></div></div><div class="cgrid">'+cs.map(ccard).join("")+'</div></section>';
+  if (ps.length || !cs.length) h += '<section class="sec">'+(cs.length?'<div class="sec-head"><div><span class="label">'+T("catalog")+'</span><h2>'+T("allProducts")+'</h2></div></div>':'')+grid(ps)+'</section>';
   return h + '</main>' + footer();
 }
 function viewColl(id){
   var c = coll(id); if (!c) return viewHome();
   var items = collProducts(c);
-  var h = header(c.category) + '<main class="wrap"><p class="crumb"><a href="/">'+T("home")+'</a> / <a href="'+urlCat(c.category)+'">'+esc(catName(c.category))+'</a></p>';
-  h += '<div class="chead"><span class="label">'+esc(L(c,"kicker")||T("collection"))+'</span><h1>'+esc(L(c,"title"))+'</h1><p>'+esc(L(c,"desc"))+'</p></div>';
-  h += '<figure class="wide-window"><div class="scene">'+sceneImg(c)+'</div></figure>';
-  h += '<section class="sec"><div class="sec-head"><div><span class="label">'+items.length+' '+T("pieces")+'</span><h2>'+T("shopThis")+'</h2></div></div>'+grid(items, true)+'</section>';
+  var h = header(c.category) + '<main class="wrap"><p class="crumb"><a href="/">'+T("home")+'</a>'+(cat(c.category)?' / <a href="'+urlCat(c.category)+'">'+esc(catName(c.category))+'</a>':'')+'</p>';
+  var desc = L(c,"desc");
+  h += '<article class="outfit big solo"><figure class="window o-media"><div class="scene">'+sceneImg(c)+'</div></figure><div class="o-side">'+
+    '<span class="label">'+esc(L(c,"kicker")||catName(c.category))+'</span><h1>'+esc(L(c,"title"))+'</h1>'+(desc?'<p class="desc">'+esc(desc)+'</p>':'')+shareRow(urlColl(c), L(c,"title"));
+  if (items.length) h += '<p class="o-count">'+items.length+' '+T(items.length===1?"pieceOne":"pieces")+' · '+T("tapToShop")+'</p><ol class="look in">'+items.map(function(p,k){ return lookRow(p, k+1); }).join("")+'</ol>';
+  h += '</div></article>';
+  var fam = cat(c.category) ? familyIds(topOf(c.category)) : [c.category];
+  var more = S.collections.filter(function(x){ return x !== c && fam.indexOf(x.category) >= 0; }).slice(0,4);
+  if (more.length) h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("rooms")+'</span><h2>'+T("moreLooks")+'</h2></div></div><div class="cgrid">'+more.map(ccard).join("")+'</div></section>';
+  return h + '</main>' + footer();
+}
+function viewProd(id){
+  var p = prod(id); if (!p) return viewHome();
+  var img = safeImg(p.image), url = linkFor(p), name = L(p,"name"), note = L(p,"note"), own = isOwn(p);
+  var h = header(p.category) + '<main class="wrap"><p class="crumb"><a href="/">'+T("home")+'</a>'+(cat(p.category)?' / <a href="'+urlCat(p.category)+'">'+esc(catName(p.category))+'</a>':'')+'</p>';
+  var buy;
+  if (own) buy = '<div class="pbuy">'+card(p).replace(/^[\s\S]*?<div class="pbody">/, '<div class="pbody">').replace(/<\/article>$/, '')+'</div>';
+  else buy = '<div class="pbody"><span class="label">'+esc(storeShown(p))+' · '+esc(catName(p.category))+'</span><h1>'+esc(name)+'</h1>'+(note?'<p class="desc">'+esc(note)+'</p>':'')+
+    (p.price?'<p class="price">'+esc(p.price)+'</p>':'')+
+    (url ? '<a class="btn pbig" data-track="'+esc(p.id)+'" href="'+esc(url)+'" target="_blank" rel="sponsored noopener noreferrer">'+T("shopOn")+esc(storeShown(p))+' '+ARROW+'</a>' : '<p class="pnote">'+T("linkPending")+'</p>')+'</div>';
+  h += '<article class="ppage"><figure class="window ppage-media">'+(img?'<img src="'+esc(img)+'" alt="'+esc(name)+'">':phProduct(p))+'</figure><div class="ppage-side">'+buy+shareRow(urlProd(p), name);
+  var ins = S.collections.filter(function(c){ return (c.productIds||[]).indexOf(p.id) >= 0; });
+  if (ins.length) h += '<div class="in-looks"><span class="label">'+T("inLooks")+'</span>'+ins.map(function(c){ return '<a href="'+esc(urlColl(c))+'">'+esc(L(c,"title"))+' '+ARROW+'</a>'; }).join("")+'</div>';
+  h += '</div></article>';
+  var fam = cat(p.category) ? familyIds(topOf(p.category)) : [p.category];
+  var rel = S.products.filter(function(x){ return x !== p && fam.indexOf(x.category) >= 0; }).slice(0,4);
+  if (rel.length) h += '<section class="sec"><div class="sec-head"><div><span class="label">'+T("catalog")+'</span><h2>'+T("moreOf")+' <em>'+esc(catName(topOf(p.category)||p.category).toLowerCase())+'</em></h2></div></div>'+grid(rel)+'</section>';
   return h + '</main>' + footer();
 }
 
@@ -1037,11 +1143,11 @@ function listCollections(){
   return h + '</div>';
 }
 function listProducts(){
-  var h = '<div class="tools"><button class="sbtn pri" data-act="new-p">Nuevo producto</button><input type="search" id="a-q" placeholder="Buscar producto" value="'+esc(A.q)+'"><select id="a-qcat" aria-label="Filtrar por categoría"><option value="">Todas las categorías</option>'+S.categories.map(function(c){return '<option value="'+esc(c.id)+'"'+(A.qcat===c.id?' selected':'')+'>'+esc(c.label)+'</option>';}).join("")+'</select>';
+  var h = '<div class="tools"><button class="sbtn pri" data-act="new-p">Nuevo producto</button><input type="search" id="a-q" placeholder="Buscar producto" value="'+esc(A.q)+'"><select id="a-qcat" aria-label="Filtrar por categoría"><option value="">Todas las categorías</option>'+catOptions(A.qcat)+'<option value="none"'+(A.qcat==="none"?' selected':'')+'>Sin categoría</option></select>';
   if (S.products.some(function(p){return p.example;}) || S.collections.some(function(c){return c.example;})) h += delBtn("examples","Quitar ejemplos");
   h += '</div>';
   var q = A.q.toLowerCase();
-  var list = S.products.filter(function(p){ return (!A.qcat || p.category===A.qcat) && (!q || p.name.toLowerCase().indexOf(q)>=0); });
+  var list = S.products.filter(function(p){ return (!A.qcat || (A.qcat==="none" ? !cat(p.category) : familyIds(A.qcat).indexOf(p.category)>=0)) && (!q || p.name.toLowerCase().indexOf(q)>=0); });
   if (!list.length) return h + '<p class="empty">'+(S.products.length?'Ningún producto coincide con la búsqueda.':'Aún no hay productos. Añade el primero con su foto y tu enlace de afiliada.')+'</p>';
   var filtered = !!(q || A.qcat);
   h += '<div class="alist">';
@@ -1050,6 +1156,8 @@ function listProducts(){
     var inC = S.collections.filter(function(c){return (c.productIds||[]).indexOf(p.id)>=0;}).length;
     h += '<div class="arow">'+thumb(p.image, phProduct(p))+'<div class="ainfo"><b>'+esc(p.name)+'</b><small>'+esc(storeName(p))+' · '+esc(catLabel(p.category))+(inC?' · en '+inC+(inC===1?' colección':' colecciones'):'')+(linkFor(p)?'':' · sin enlace')+(p.example?' · Ejemplo':'')+'</small></div><div class="aact">'+
       (filtered?'':'<button class="sbtn icon" data-act="move" data-kind="p" data-id="'+p.id+'" data-d="-1"'+(i===0?' disabled':'')+' aria-label="Subir">↑</button><button class="sbtn icon" data-act="move" data-kind="p" data-id="'+p.id+'" data-d="1"'+(i===S.products.length-1?' disabled':'')+' aria-label="Bajar">↓</button>')+
+      '<button class="sbtn" data-copy="'+esc(urlProd(p))+'" title="Copiar el enlace de este producto">'+LINK_ICON+' Enlace</button>'+
+      '<select class="acat" data-pcat="'+p.id+'" aria-label="Categoría de '+esc(p.name)+'">'+(cat(p.category)?'':'<option value="" selected>Elige categoría…</option>')+catOptions(p.category)+'</select>'+
       '<button class="sbtn pri" data-act="edit" data-kind="p" data-id="'+p.id+'">Editar</button></div></div>';
   });
   return h + '</div>';
@@ -1104,6 +1212,9 @@ function editSettingsMain(){
     fld("s-welcomeKicker","Etiqueta pequeña de arriba",s.welcomeKicker||"","","text","Bienvenida")+fld("s-welcomeKicker_en","Etiqueta en inglés",s.welcomeKicker_en||"","","text","Welcome")+
     '</div><div class="ed-foot"><span></span><div><button class="sbtn pri" data-act="save-settings">Guardar bienvenida y ajustes</button></div></div></div>'+
     '<div class="editor" style="margin-top:18px"><h2>Ajustes del sitio</h2><div class="fgrid">'+
+    '<div class="field full"><label for="s-homeCat">Categoría principal (la que sale al entrar)</label><select id="s-homeCat">'+
+      topCats().map(function(c){ return '<option value="'+esc(c.id)+'"'+(homeCat()===c.id?' selected':'')+'>'+esc(c.label)+'</option>'; }).join("")+
+      '<option value="all"'+(S.settings.homeCat==="all"?' selected':'')+'>Todo mezclado</option></select><p class="hint">Las demás categorías salen solo cuando la gente toca su botón arriba.</p></div>'+
     fld("s-name","Nombre del sitio",siteName())+fld("s-brandName","Texto junto al logo (opcional)",s.brandName)+
     fld("s-tagline","Frase del catálogo",s.tagline,"full")+fld("s-tagline_en","Frase del catálogo en inglés",s.tagline_en||"","full","text","Complete rooms to inspire you, with every piece one click away.")+
     fld("s-brandUrl","Enlace a EyreRosesDecor (Instagram, web o TikTok)",s.brandUrl,"full","url","https://…")+
@@ -1177,7 +1288,7 @@ function editCollection(){
   return h;
 }
 function readSettings(){
-  var s = S.settings, map = { name:"s-name", brandName:"s-brandName", tagline:"s-tagline", brandUrl:"s-brandUrl", disclosure:"s-disclosure", welcomeTitle:"s-welcomeTitle", welcomeText:"s-welcomeText", welcomeSign:"s-welcomeSign", welcomeKicker:"s-welcomeKicker", shipCost:"s-shipCost", ownBrand:"s-ownBrand", freeShipFrom:"s-freeShipFrom", whatsapp:"s-whatsapp", welcomeText_en:"s-welcomeText_en", welcomeSign_en:"s-welcomeSign_en", welcomeKicker_en:"s-welcomeKicker_en", tagline_en:"s-tagline_en", disclosure_en:"s-disclosure_en" };
+  var s = S.settings, map = { name:"s-name", brandName:"s-brandName", tagline:"s-tagline", brandUrl:"s-brandUrl", disclosure:"s-disclosure", welcomeTitle:"s-welcomeTitle", welcomeText:"s-welcomeText", welcomeSign:"s-welcomeSign", welcomeKicker:"s-welcomeKicker", shipCost:"s-shipCost", homeCat:"s-homeCat", ownBrand:"s-ownBrand", freeShipFrom:"s-freeShipFrom", whatsapp:"s-whatsapp", welcomeText_en:"s-welcomeText_en", welcomeSign_en:"s-welcomeSign_en", welcomeKicker_en:"s-welcomeKicker_en", tagline_en:"s-tagline_en", disclosure_en:"s-disclosure_en" };
   Object.keys(map).forEach(function(k){ var v = val(map[k]); if (v !== undefined){ if (/_en$/.test(k) && s[k] !== v) delete s[k+"_src"]; s[k] = v; } });
   var tag = val("s-amazonTag"); if (tag !== undefined) s.amazonTag = tag.replace(/\s+/g,"");
   if (!s.name) s.name = "Eyre Roses Decor Edit";
@@ -1428,6 +1539,9 @@ root.addEventListener("change", function(e){
       .then(function(){ A.uploading = false; render(); });
   } else if (t.id === "f-store"){ syncForm(); render(); }
   else if (t.id === "a-qcat"){ A.qcat = t.value; render(); }
+  else if (t.hasAttribute && t.hasAttribute("data-pcat")){
+    var pp = prod(t.getAttribute("data-pcat")); if (pp && t.value){ pp.category = t.value; changed(); toast("Categoría cambiada a " + catLabel(t.value) + "."); render(); }
+  }
   else if (t.hasAttribute && t.hasAttribute("data-cat-parent")){
     var cp = cat(t.getAttribute("data-cat-parent")); if (cp){ if (t.value) cp.parent = t.value; else delete cp.parent; changed(); render(); }
   }
@@ -1453,6 +1567,7 @@ function render(){
   if (r.view === "admin") html = viewAdmin();
   else if (r.view === "coll") html = viewColl(r.id);
   else if (r.view === "cat") html = viewCat(r.id);
+  else if (r.view === "prod") html = viewProd(r.id);
   else if (r.view === "policy") html = viewPolicy(r.id);
   else html = viewHome();
   root.innerHTML = html;
@@ -1515,13 +1630,17 @@ function orderText(){
   return t;
 }
 document.addEventListener("click", function(e){
+  var cp = e.target.closest && e.target.closest("[data-copy]");
+  if (cp){ e.preventDefault(); copyText(fullUrl(cp.getAttribute("data-copy"))).then(function(){ toast(T("linkCopied")); }); return; }
+  var sh = e.target.closest && e.target.closest("[data-share]");
+  if (sh){ e.preventDefault(); navigator.share({ title: sh.getAttribute("data-title") || document.title, url: fullUrl(sh.getAttribute("data-share")) }).catch(function(){}); return; }
   var sz = e.target.closest && e.target.closest(".size[data-size]");
-  if (sz){ var card = sz.closest(".pcard"); card.querySelectorAll(".size").forEach(function(b){ b.classList.toggle("on", b === sz); }); return; }
+  if (sz){ var card = sz.closest(".pcard, .pbuy"); card.querySelectorAll(".size").forEach(function(b){ b.classList.toggle("on", b === sz); }); return; }
   var c = e.target.closest && e.target.closest("[data-cart]"); if (!c) return;
   e.preventDefault(); e.stopPropagation();
   var act = c.getAttribute("data-cart"), lines = cartLines(), i = +c.getAttribute("data-i");
   if (act === "add"){
-    var card2 = c.closest(".pcard"), on = card2 && card2.querySelector(".size.on");
+    var card2 = c.closest(".pcard, .pbuy"), on = card2 && card2.querySelector(".size.on");
     if (c.getAttribute("data-needsize") && !on){ toast(T("pickSize")); var first = card2.querySelector(".size:not([disabled])"); if (first) first.focus(); return; }
     addToCart(c.getAttribute("data-pid"), on ? on.getAttribute("data-size") : "");
     track("cart", { pid:c.getAttribute("data-pid") });
@@ -1572,6 +1691,10 @@ function seo(r){
   if (r.view === "coll" && coll(r.id)){
     var c = coll(r.id); title = L(c,"title") + " · " + name; desc = plainText(L(c,"desc") || L(c,"title"), 155) || desc; img = safeImg(c.image) || img; path = urlColl(c);
     ld = { "@context":"https://schema.org", "@type":"CollectionPage", name:L(c,"title"), description:desc, url:absUrl(path), image:absUrl(img), mainEntity:itemList(collProducts(c)) };
+  } else if (r.view === "prod" && prod(r.id)){
+    var pp = prod(r.id); title = L(pp,"name") + " · " + name; desc = plainText(L(pp,"note") || ((LANG==="en"?"Shop ":"Compra ") + L(pp,"name") + (LANG==="en"?", picked by Eyre Roses.":", elegido por Eyre Roses.")), 155); img = safeImg(pp.image) || img; path = urlProd(pp);
+    ld = { "@context":"https://schema.org", "@type":"Product", name:L(pp,"name"), description:desc, url:absUrl(path), image: safeImg(pp.image) ? absUrl(pp.image) : undefined, category:catName(pp.category) };
+    if (isOwn(pp) && priceNum(pp.price)) ld.offers = { "@type":"Offer", price:String(priceNum(pp.price)), priceCurrency:"USD", availability: pp.soldOut ? "https://schema.org/SoldOut" : "https://schema.org/InStock", url:absUrl(path) };
   } else if (r.view === "cat" && cat(r.id)){
     var fam = familyIds(r.id), ps = S.products.filter(function(p){ return fam.indexOf(p.category)>=0; });
     title = catName(r.id) + " · " + name; desc = plainText((LANG==="en" ? "Shop " + catName(r.id) + " picked by Eyre Roses: " : catName(r.id) + " elegidos por Eyre Roses: ") + ps.slice(0,6).map(function(p){ return L(p,"name"); }).join(", "), 155); path = urlCat(r.id);

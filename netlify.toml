@@ -24,6 +24,16 @@
   status = 200
 
 [[redirects]]
+  from = "/producto/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/product/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
   from = "/categoria/*"
   to = "/index.html"
   status = 200
