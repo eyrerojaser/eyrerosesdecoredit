@@ -765,7 +765,15 @@ function topCats(){ return S.categories.filter(function(c){ return !c.parent || 
 function topOf(id){ var c = cat(id); if (!c) return ""; return (c.parent && cat(c.parent)) ? c.parent : c.id; }
 function familyIds(id){ return [id].concat(kids(id).map(function(c){ return c.id; })); }
 function catName(id){ var c = cat(id); if (!c) return T("noCat"); if (LANG === "en"){ if (c.label_en && c.label_en.trim()) return c.label_en; if (CAT_EN[c.id]) return CAT_EN[c.id]; } return c.label; }
-function storeShown(p){ return p.store === "propia" ? ownBrand() : p.store === "Otra" ? (p.storeLabel || T("store")) : p.store; }
+function storeShown(p){
+  if (p.store === "propia") return ownBrand();
+  if (p.store !== "Otra") return p.store;
+  if (p.storeLabel) return p.storeLabel;
+  var u = String(p.url || "");
+  if (/^B0[A-Z0-9]{8}$/.test(u) || /amazon\.|amzn\.|\ba\.co\//i.test(u)) return "Amazon";
+  var g = u ? storeFromLink(u) : null;
+  return g && g.store !== "Otra" ? g.store : (g && g.storeLabel ? g.storeLabel.slice(0,14) : T("store"));
+}
 function isOwn(p){ return p.store === "propia"; }
 function sizeList(t){ return String(t||"").split(/[,;\/]+/).map(function(x){ return x.trim(); }).filter(Boolean); }
 function buyHref(p, size){
@@ -835,7 +843,7 @@ function card(p, n){
 function hasPhoto(p){ return !!safeImg(p.image) || isOwn(p); }
 function lookRow(p, n){
   var url = linkFor(p), name = L(p,"name"), note = L(p,"note");
-  var btn = url ? '<a class="buy lbuy" data-track="'+esc(p.id)+'" href="'+esc(url)+'" target="_blank" rel="sponsored noopener noreferrer" aria-label="'+esc(T("shopOn")+storeShown(p)+": "+name)+'">'+T("shopShort")+' '+ARROW+'</a>' : '<span class="pnote">'+T("linkPending")+'</span>';
+  var btn = url ? '<a class="buy lbuy" data-track="'+esc(p.id)+'" href="'+esc(url)+'" target="_blank" rel="sponsored noopener noreferrer" aria-label="'+esc(T("shopOn")+storeShown(p)+": "+name)+'">'+esc(storeShown(p))+' '+ARROW+'</a>' : '<span class="pnote">'+T("linkPending")+'</span>';
   var im = safeImg(p.image);
   return '<li class="lrow'+(im?' has-img':'')+'">'+(n?'<span class="lnum">'+n+'</span>':'<span class="lnum dot" aria-hidden="true"></span>')+(im?'<a class="lthumb" href="'+esc(urlProd(p))+'" tabindex="-1" aria-hidden="true"><img src="'+esc(im)+'" alt="" loading="lazy"></a>':'')+'<div class="ltext"><span class="label">'+esc(storeShown(p))+' · '+esc(catName(p.category))+'</span><h3><a href="'+esc(urlProd(p))+'">'+esc(name)+'</a></h3>'+(note?'<p>'+esc(note)+'</p>':'')+'</div>'+btn+'</li>';
 }
