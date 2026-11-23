@@ -768,11 +768,10 @@ function catName(id){ var c = cat(id); if (!c) return T("noCat"); if (LANG === "
 function storeShown(p){
   if (p.store === "propia") return ownBrand();
   if (p.store !== "Otra") return p.store;
-  if (p.storeLabel) return p.storeLabel;
-  var u = String(p.url || "");
-  if (/^B0[A-Z0-9]{8}$/.test(u) || /amazon\.|amzn\.|\ba\.co\//i.test(u)) return "Amazon";
-  var g = u ? storeFromLink(u) : null;
-  return g && g.store !== "Otra" ? g.store : (g && g.storeLabel ? g.storeLabel.slice(0,14) : T("store"));
+  var lab = String(p.storeLabel || "").trim();
+  if (lab && !/^(link|links|enlace|enlaces|url|web)$/i.test(lab)) return lab;
+  var g = p.url ? storeFromLink(String(p.url)) : null;
+  return g && g.store !== "Otra" ? g.store : "Amazon";
 }
 function isOwn(p){ return p.store === "propia"; }
 function sizeList(t){ return String(t||"").split(/[,;\/]+/).map(function(x){ return x.trim(); }).filter(Boolean); }
@@ -1379,7 +1378,7 @@ function storeFromLink(u){
   var known = [["ashley","Ashley"],["wayfair","Wayfair"],["target","Target"],["walmart","Walmart"]];
   for (var i=0;i<known.length;i++) if (u.toLowerCase().indexOf(known[i][0]) >= 0) return { store:known[i][1] };
   var host = ""; try { host = new URL(u).hostname.replace(/^www\./,"").split(".")[0]; } catch(e){}
-  return { store:"Otra", storeLabel: host ? host.charAt(0).toUpperCase() + host.slice(1) : "" };
+  return { store:"Amazon" };
 }
 function parseBulk(text){
   var out = [], pending = "";
